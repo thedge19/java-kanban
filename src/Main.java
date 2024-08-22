@@ -26,7 +26,9 @@ public class Main {
                     System.out.println();
                     break;
                 case "2":
-
+                    System.out.println("Введите id искомоц задачи:");
+                    int taskId = Integer.parseInt(scanner.nextLine());
+                    manager.showTaskById(taskId);
                 case "3":
                     manager.cs();
                     break;

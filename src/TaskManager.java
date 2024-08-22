@@ -55,7 +55,24 @@ public class TaskManager {
         }
     }
 
-
+    public void showTaskById(int id) {
+        if (tasks.get(id) != null) {
+            Task task = tasks.get(id);
+            System.out.println(id + "." + task.name + " " + task.type + " " + task.status);
+            System.out.println();
+        } else if (subTasks.get(id) != null) {
+            SubTask subTask = subTasks.get(id);
+            System.out.println(id + "." + subTask.name + " " + subTask.type + " " + subTask.status);
+            System.out.println();
+        } else if (epics.get(id) != null) {
+            Epic epic = epics.get(id);
+            System.out.println(id + "." + epic.name + " " + epic.type + " " + epic.status);
+            System.out.println();
+        } else {
+            System.out.println("Задачи с таким id не существует");
+            System.out.println();
+        }
+    }
 
 //    public String getTaskNameByTaskId(int id) {
 //        return tasks.get(id).getName();
