@@ -6,4 +6,9 @@ public class Checkers {
         return epics.get(id) != null;
     }
 
+    public boolean isChange(int answer) {
+        return answer == 1;
+    }
+
+
 }

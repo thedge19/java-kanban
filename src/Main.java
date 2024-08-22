@@ -26,7 +26,7 @@ public class Main {
                     System.out.println();
                     break;
                 case "2":
-                    System.out.println("Введите id искомоц задачи:");
+                    System.out.println("Введите id искомой задачи:");
                     int taskId = Integer.parseInt(scanner.nextLine());
                     manager.showTaskById(taskId);
                 case "3":
@@ -52,11 +52,23 @@ public class Main {
 //                    }
 //                    break;
                 case "4":
-                    manager.showTasks();
-                    System.out.println("Введите id задачи, у которой необходимо изменить статус:");
+                    System.out.println("Введите id задачи, которую необходимо заменить:");
                     int changeTaskId = Integer.parseInt(scanner.nextLine().trim());
+                    System.out.println("Обновить наименование задачи? 1 - Да, 2 - Нет.");
+                    boolean isChangeName = checkers.isChange(Integer.parseInt(scanner.nextLine()));
+                    if (isChangeName) System.out.println("Введите новое наименование:");
+                    String updatedName = isChangeName ? scanner.nextLine() : "";
+                    System.out.println("Обновить описание задачи? 1 - Да, 2 - Нет.");
+                    boolean isChangeDescription = checkers.isChange(Integer.parseInt(scanner.nextLine()));
+                    if (isChangeDescription) System.out.println("Введите новое описание:");
+                    String updatedDescription = isChangeDescription ? scanner.nextLine() : "";
+                    System.out.println("Обновить статус задачи? 1 - Да, 2 - Нет.");
+                    boolean isChangeStatus = checkers.isChange(Integer.parseInt(scanner.nextLine()));
+                    if (isChangeStatus) System.out.println("Введите IN_PROGRESS или DONE");
+                    Status updatedStatus = isChangeStatus ? Status.valueOf(scanner.nextLine()) :
+                            manager.checkOldStatus(changeTaskId);
+                    manager.updateTask(changeTaskId, updatedName, updatedDescription, updatedStatus);
                     break;
-
                 case "5":
                     System.out.println("Введите id задачи, которую Вы хотите удалить:");
                     int removeId = Integer.parseInt(scanner.nextLine().trim());
@@ -65,10 +77,8 @@ public class Main {
                 case "6":
                     manager.deleteAllTasks();
                     break;
-
                 case "0":
                     return;
-
                 default:
                     System.out.println("Некорректная команда");
                     break;
@@ -82,7 +92,7 @@ public class Main {
         System.out.println("1 - Получить список задач");
         System.out.println("2 - Получить задачу по идентификатору");
         System.out.println("3 - Добавить задачу");
-        System.out.println("4 - Изменить статус задачи");
+        System.out.println("4 - Обновить задачу");
         System.out.println("5 - Удалить задачу по идентификатору");
         System.out.println("6 - Удалить все задачи");
         System.out.println("0 - Выход");

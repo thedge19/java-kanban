@@ -100,6 +100,45 @@ public class TaskManager {
         return epics.isEmpty();
     }
 
+    public void updateTask(int changeTaskId, String updatedName, String updatedDescription, Status updatedStatus) {
+
+        if (tasks.get(changeTaskId) != null) {
+            Task oldTask = tasks.get(changeTaskId);
+            String newName;
+            String newDescription;
+            Status newStatus;
+            newName = updatedName.isEmpty() ? oldTask.name : updatedName;
+            newDescription = updatedDescription.isEmpty() ? oldTask.description : updatedDescription;
+            newStatus = updatedStatus.equals(oldTask.status) ? oldTask.status : updatedStatus;
+            Task newTask = new Task(newName, newDescription, newStatus, oldTask.type);
+            tasks.put(changeTaskId, newTask);
+            System.out.println();
+        } else if (subTasks.get(changeTaskId) != null) {
+            SubTask oldSubTask = subTasks.get(changeTaskId);
+            String newName;
+            String newDescription;
+            Status newStatus;
+            newName = updatedName.isEmpty() ? oldSubTask.name : updatedName;
+            newDescription = updatedDescription.isEmpty() ? oldSubTask.description : updatedDescription;
+            newStatus = updatedStatus.equals(oldSubTask.status) ? oldSubTask.status : updatedStatus;
+            SubTask newSubtask = new SubTask(newName, newDescription, newStatus, oldSubTask.type, oldSubTask.epicId);
+            System.out.println("Задача " + changeTaskId + " обновлена.");
+        } else if (epics.get(changeTaskId) != null) {
+            Epic oldEpic = epics.get(changeTaskId);
+            String newName;
+            String newDescription;
+            Status newStatus;
+            newName = updatedName.isEmpty() ? oldEpic.name : updatedName;
+            newDescription = updatedDescription.isEmpty() ? oldEpic.description : updatedDescription;
+            newStatus = updatedStatus.equals(oldEpic.status) ? oldEpic.status : updatedStatus;
+            Epic newEpic = new Epic(newName, newDescription, newStatus, oldEpic.type, oldEpic.subTasksIds);
+            epics.put(changeTaskId, newEpic);
+        } else {
+            System.out.println("Задачи с таким id не существует");
+            System.out.println();
+        }
+    }
+
     public void deleteTaskById(int id) {
         if (tasks.get(id) != null) {
             System.out.println("Задача " + tasks.remove(id).getName() + " удалена.");
@@ -131,5 +170,15 @@ public class TaskManager {
         subTasks.clear();
         System.out.println("Все задачи удалены");
         System.out.println();
+    }
+
+    public Status checkOldStatus(int id) {
+        if (tasks.get(id) != null) {
+            return tasks.get(id).status;
+        } else if (subTasks.get(id) != null) {
+            return subTasks.get(id).status;
+        } else if (epics.get(id) != null) {
+            return epics.get(id).status;
+        } else return Status.NEW;
     }
 }
