@@ -25,12 +25,4 @@ public class Task {
     public void setStatus(Status status) {
         this.status = status;
     }
-
-    public TaskType getType() {
-        return type;
-    }
-
-    public String getDescription() {
-        return description;
-    }
 }

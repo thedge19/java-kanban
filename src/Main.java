@@ -30,8 +30,6 @@ public class Main {
                     int taskId = Integer.parseInt(scanner.nextLine());
                     manager.showTaskById(taskId);
                 case "3":
-//                    manager.cs();
-//                    break;
                     printTasksTypesMenu();
 
                     int taskTypeId = Integer.parseInt(scanner.nextLine().trim()); // Вводится номер типа задачи

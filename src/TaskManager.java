@@ -24,6 +24,7 @@ public class TaskManager {
                 idError();
             }
         }
+
         System.out.println("Задача *" + name + "* создана");
         System.out.println("-----------------------------");
     }
@@ -56,17 +57,6 @@ public class TaskManager {
             idError();
         }
     }
-
-//    public void cs() {
-//        tasks.put(1, new Task("Почесать кошку", "Почесать с применением паровой щётки", Status.NEW, TaskType.TASK));
-//        tasks.put(2, new Epic("Переезд", "Переехать в деревню", Status.NEW, TaskType.EPIC, new ArrayList<>(Arrays.asList(4, 5, 6))));
-//        tasks.put(3, new Epic("Ремонт", "Отремонтировать сарай", Status.NEW, TaskType.EPIC, new ArrayList<>(Arrays.asList(7, 8))));
-//        tasks.put(4, new SubTask("Упаковать вещи", "Упаковать вещи", Status.NEW, TaskType.SUBTASK, 2));
-//        tasks.put(5, new SubTask("Упаковать кошку", "Упаковать кошку", Status.NEW, TaskType.SUBTASK, 2));
-//        tasks.put(6, new SubTask("Подготовить дом", "Подготовить дом", Status.NEW, TaskType.SUBTASK, 2));
-//        tasks.put(7, new SubTask("Поправить забор", "Поправить забор", Status.NEW, TaskType.SUBTASK, 3));
-//        tasks.put(8, new SubTask("Покрасить пол", "Покрасить пол", Status.NEW, TaskType.SUBTASK, 3));
-//    }
 
     // метод изменения задачи
     public void updateTask(int changeTaskId, String updatedName, String updatedDescription, Status updatedStatus) {
