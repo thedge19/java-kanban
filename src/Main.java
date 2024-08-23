@@ -114,12 +114,6 @@ public class Main {
         System.out.println("0 - Выход");
     }
 
-    public static void printSubMenu() {
-        System.out.println("введите 1 - для изменения статуса на *В процессе*");
-        System.out.println("введите 2 - для изменения статуса на *Сделано*");
-        System.out.println("введите 0 - для отмены");
-    }
-
     public static void printTasksTypesMenu() {
         System.out.println("Выберите тип задачи");
         System.out.println("введите 1 - для создания обычной задачи");
