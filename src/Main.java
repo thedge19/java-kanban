@@ -52,30 +52,43 @@ public class Main {
 //                    }
 //                    break;
                 case "4":
-                    System.out.println("Введите id задачи, которую необходимо заменить:");
+                    System.out.println("Введите id задачи, которую необходимо обновить:");
                     int changeTaskId = Integer.parseInt(scanner.nextLine().trim());
+
                     System.out.println("Обновить наименование задачи? 1 - Да, 2 - Нет.");
                     boolean isChangeName = checkers.isChange(Integer.parseInt(scanner.nextLine()));
                     if (isChangeName) System.out.println("Введите новое наименование:");
                     String updatedName = isChangeName ? scanner.nextLine() : "";
+
                     System.out.println("Обновить описание задачи? 1 - Да, 2 - Нет.");
                     boolean isChangeDescription = checkers.isChange(Integer.parseInt(scanner.nextLine()));
                     if (isChangeDescription) System.out.println("Введите новое описание:");
                     String updatedDescription = isChangeDescription ? scanner.nextLine() : "";
-                    System.out.println("Обновить статус задачи? 1 - Да, 2 - Нет.");
-                    boolean isChangeStatus = checkers.isChange(Integer.parseInt(scanner.nextLine()));
-                    if (isChangeStatus) System.out.println("Введите IN_PROGRESS или DONE");
-                    Status updatedStatus = isChangeStatus ? Status.valueOf(scanner.nextLine()) :
-                            manager.checkOldStatus(changeTaskId);
+
+                    Status updatedStatus;
+                    if (!manager.checkIsEpic(changeTaskId)) {
+                        System.out.println("Обновить статус задачи? 1 - Да, 2 - Нет.");
+                        boolean isChangeStatus = checkers.isChange(Integer.parseInt(scanner.nextLine()));
+
+                        if (isChangeStatus) System.out.println("Введите IN_PROGRESS или DONE");
+                        updatedStatus = isChangeStatus ? Status.valueOf(scanner.nextLine()) :
+                                manager.checkOldStatus(changeTaskId);
+                    } else {
+                        updatedStatus = manager.checkOldStatus(changeTaskId);
+                    }
                     manager.updateTask(changeTaskId, updatedName, updatedDescription, updatedStatus);
                     break;
                 case "5":
                     System.out.println("Введите id задачи, которую Вы хотите удалить:");
-                    int removeId = Integer.parseInt(scanner.nextLine().trim());
-                    manager.deleteTaskById(removeId);
+                    manager.deleteTaskById(Integer.parseInt(scanner.nextLine().trim()));
                     break;
                 case "6":
                     manager.deleteAllTasks();
+                    break;
+                case "7":
+                    System.out.println("Введите id эпика, список подзадач которого Вы хотите получить:");
+                    int epicId = Integer.parseInt(scanner.nextLine().trim());
+                    manager.showSubTaskList(epicId);
                     break;
                 case "0":
                     return;
@@ -95,6 +108,7 @@ public class Main {
         System.out.println("4 - Обновить задачу");
         System.out.println("5 - Удалить задачу по идентификатору");
         System.out.println("6 - Удалить все задачи");
+        System.out.println("7 - Получить все подзадачи эпика");
         System.out.println("0 - Выход");
     }
 
