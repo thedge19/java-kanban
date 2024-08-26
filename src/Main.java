@@ -1,3 +1,11 @@
+import manager.TaskManager;
+import tasks.SubTask;
+import tasks.Task;
+import tasks.Epic;
+import enums.TaskType;
+import enums.Status;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -6,7 +14,6 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
         TaskManager manager = new TaskManager();
-        Checkers checkers = new Checkers();
 
         while (true) {
             printMenu();
@@ -16,82 +23,199 @@ public class Main {
             switch (command) {
                 case "1":
                     if (manager.tasksIsEmpty()) {
-                        System.out.println("*********************");
                         System.out.println("* Список задач пуст *");
-                        System.out.println("******************+++");
                         break;
                     } else {
-                        manager.showTasks();
+                        manager.getTasks();
+                        manager.getEpics();
+                        manager.getSubTasks();
                     }
                     System.out.println();
                     break;
+
                 case "2":
                     System.out.println("Введите id искомой задачи:");
                     int taskId = Integer.parseInt(scanner.nextLine());
-                    manager.showTaskById(taskId);
+                    String taskType = manager.checkTypeById(taskId); // проверка типа задачи
+                    switch (taskType) {
+                        case "task":
+                            manager.showTask(taskId);
+                            break;
+                        case "epic":
+                            manager.showEpic(taskId);
+                            break;
+                        case "subTask":
+                            manager.showSubTask(taskId);
+                            break;
+                        default:
+                            return;
+                    }
+                    break;
                 case "3":
                     printTasksTypesMenu();
 
                     int taskTypeId = Integer.parseInt(scanner.nextLine().trim()); // Вводится номер типа задачи
 
-                    if (!manager.isEpicExist() && taskTypeId == 3) { // если нет ни одного эпика, не позволяется создать подзадачу
-                        System.out.println("Создайте сначала большую задачу");
-                    } else if (taskTypeId > 0 && taskTypeId < 4) { // если выбран номер от 1 до 3, конструируется задача
-                        System.out.println("Введите наименование задачи");
-                        String name = scanner.nextLine().trim();
-                        System.out.println("Введите описание задачи");
-                        String description = scanner.nextLine().trim();
-                        int epicId = 0; // номер эпика по умолчанию 0, меняется в случае выбора подзадачи
-                        if (taskTypeId == 3) { // если подазадача, то добавляется номер эпика
-                            System.out.println("Введите id большой задачи");
-                            epicId = Integer.parseInt(scanner.nextLine().trim());
-                        }
-                        manager.constructTask(taskTypeId, name, description, epicId);
-                    } else { // если введен тип задачи не из диапазона 1 - 3
-                        System.out.println("Некорректная команда");
+                    switch (taskTypeId) {
+                        case 1:
+                            Task task = new Task();
+                            System.out.println("Введите наименование задачи");
+                            task.setName(scanner.nextLine().trim());
+                            System.out.println("Введите описание задачи");
+                            task.setDescription(scanner.nextLine().trim());
+                            task.setStatus(Status.NEW);
+                            task.setType(TaskType.TASK);
+                            manager.constructTask(task);
+                            break;
+                        case 2:
+                            Epic epic = new Epic();
+                            System.out.println("Введите наименование эпика");
+                            epic.setName(scanner.nextLine().trim());
+                            System.out.println("Введите описание эпика");
+                            epic.setDescription(scanner.nextLine().trim());
+                            epic.setStatus(Status.NEW);
+                            epic.setType(TaskType.EPIC);
+                            epic.setSubTasksIds(new ArrayList<>());
+                            manager.constructEpic(epic);
+                            break;
+                        case 3:
+                            System.out.println("Введите номер эпика подзадачи:");
+                            int epicId = Integer.parseInt(scanner.nextLine().trim());
+                            if (manager.isEpicExist(epicId)) {
+                                SubTask subTask = new SubTask();
+                                System.out.println("Введите наименование подзадачи");
+                                subTask.setName(scanner.nextLine().trim());
+                                System.out.println("Введите описание подзадачи");
+                                subTask.setDescription(scanner.nextLine().trim());
+                                subTask.setStatus(Status.NEW);
+                                subTask.setType(TaskType.SUBTASK);
+                                subTask.setEpicId(epicId);
+                                manager.constructSubTask(subTask);
+                                break;
+                            }
+                            break;
+                        case 0:
+                            break;
+                        default:
+                            System.out.println("Некорректная команда");
+                            return;
                     }
                     break;
+
                 case "4":
                     System.out.println("Введите id задачи, которую необходимо обновить:");
-                    int changeTaskId = Integer.parseInt(scanner.nextLine().trim());
+                    int updateTaskId = Integer.parseInt(scanner.nextLine().trim());
+                    String updatedTaskType = manager.checkTypeById(updateTaskId);
 
-                    System.out.println("Обновить наименование задачи? 1 - Да, Любое другое число - Нет.");
-                    boolean isChangeName = checkers.isChange(Integer.parseInt(scanner.nextLine()));
-                    if (isChangeName) System.out.println("Введите новое наименование:");
-                    String updatedName = isChangeName ? scanner.nextLine() : "";
-
-                    System.out.println("Обновить описание задачи? 1 - Да, Любое другое число - Нет.");
-                    boolean isChangeDescription = checkers.isChange(Integer.parseInt(scanner.nextLine()));
-                    if (isChangeDescription) System.out.println("Введите новое описание:");
-                    String updatedDescription = isChangeDescription ? scanner.nextLine() : "";
-
-                    Status updatedStatus;
-                    if (!manager.checkIsEpic(changeTaskId)) {
-                        System.out.println("Обновить статус задачи? 1 - Да, Любое другое число - Нет.");
-                        boolean isChangeStatus = checkers.isChange(Integer.parseInt(scanner.nextLine()));
-
-                        if (isChangeStatus) System.out.println("Введите IN_PROGRESS или DONE");
-                        updatedStatus = isChangeStatus ? Status.valueOf(scanner.nextLine()) :
-                                manager.checkOldStatus(changeTaskId);
-                    } else {
-                        updatedStatus = manager.checkOldStatus(changeTaskId);
+                    switch (updatedTaskType) {
+                        case "task":
+                            Task newTask = new Task();
+                            Task oldTask = manager.showTask(updateTaskId);
+                            System.out.println("Обновить наименование задачи? Да - введите 1, нет - любой другое число");
+                            int taskUpdateNameAnswer = Integer.parseInt(scanner.nextLine().trim());
+                            if (taskUpdateNameAnswer == 1) {
+                                System.out.println("Введите новое наименование задачи:");
+                                newTask.setName(scanner.nextLine().trim());
+                            } else {
+                                newTask.setName(oldTask.getName());
+                            }
+                            System.out.println("Обновить описание задачи? Да - введите 1, нет - любой другое число");
+                            int taskUpdateDescriptionAnswer = Integer.parseInt(scanner.nextLine().trim());
+                            if (taskUpdateDescriptionAnswer == 1) {
+                                System.out.println("Введите новое описание задачи:");
+                                newTask.setDescription(scanner.nextLine().trim());
+                            } else {
+                                newTask.setDescription(oldTask.getDescription());
+                            }
+                            System.out.println("Обновить статус задачи? Да - введите 1, нет - любой другое число");
+                            int taskUpdateStatusAnswer = Integer.parseInt(scanner.nextLine().trim());
+                            if (taskUpdateStatusAnswer == 1) {
+                                System.out.println("Введите новый статус - IN_PROGRESS, DONE");
+                                newTask.setStatus(Status.valueOf(scanner.nextLine()));
+                            } else {
+                                newTask.setStatus(oldTask.getStatus());
+                            }
+                            newTask.setType(TaskType.TASK);
+                            manager.updateTask(updateTaskId, newTask);
+                            break;
+                        case "epic":
+                            Epic newEpic = new Epic();
+                            Epic oldEpic = manager.showEpic(updateTaskId);
+                            System.out.println("Обновить наименование эпика? Да - введите 1, нет - любой другое число");
+                            int epicUpdateNameAnswer = Integer.parseInt(scanner.nextLine().trim());
+                            if (epicUpdateNameAnswer == 1) {
+                                System.out.println("Введите новое наименование эпика:");
+                                newEpic.setName(scanner.nextLine().trim());
+                            } else {
+                                newEpic.setName(oldEpic.getName());
+                            }
+                            System.out.println("Обновить описание эпика? Да - введите 1, нет - любой другое число");
+                            int updateEpicDescriptionAnswer = Integer.parseInt(scanner.nextLine().trim());
+                            if (updateEpicDescriptionAnswer == 1) {
+                                System.out.println("Введите новое описание эпика:");
+                                newEpic.setDescription(scanner.nextLine().trim());
+                            } else {
+                                newEpic.setDescription(oldEpic.getDescription());
+                            }
+                            newEpic.setStatus(oldEpic.getStatus());
+                            newEpic.setSubTasksIds(oldEpic.getSubTasksIds());
+                            newEpic.setType(TaskType.EPIC);
+                            manager.updateEpic(updateTaskId, newEpic);
+                            break;
+                        case "subTask":
+                            SubTask newSubTask = new SubTask();
+                            SubTask oldSubTask = manager.showSubTask(updateTaskId);
+                            System.out.println("Обновить наименование подзадачи? Да - введите 1, нет - любой другое число");
+                            int subtaskUpdateNameAnswer = Integer.parseInt(scanner.nextLine().trim());
+                            if (subtaskUpdateNameAnswer == 1) {
+                                System.out.println("Введите новое наименование подзадачи:");
+                                newSubTask.setName(scanner.nextLine().trim());
+                            } else {
+                                newSubTask.setName(oldSubTask.getName());
+                            }
+                            System.out.println("Обновить описание подзадачи? Да - введите 1, нет - любой другое число");
+                            int subtaskUpdateDescriptionAnswer = Integer.parseInt(scanner.nextLine().trim());
+                            if (subtaskUpdateDescriptionAnswer == 1) {
+                                System.out.println("Введите новое наименование подзадачи:");
+                                newSubTask.setDescription(scanner.nextLine().trim());
+                            } else {
+                                newSubTask.setDescription(oldSubTask.getDescription());
+                            }
+                            System.out.println("Обновить статус подзадачи? Да - введите 1, нет - любой другое число");
+                            int subtaskUpdateStatusAnswer = Integer.parseInt(scanner.nextLine().trim());
+                            if (subtaskUpdateStatusAnswer == 1) {
+                                System.out.println("Введите новый статус - IN_PROGRESS, DONE");
+                                newSubTask.setStatus(Status.valueOf(scanner.nextLine()));
+                            } else {
+                                newSubTask.setStatus(oldSubTask.getStatus());
+                            }
+                            newSubTask.setType(TaskType.SUBTASK);
+                            newSubTask.setEpicId(oldSubTask.getEpicId());
+                            manager.updateSubTask(updateTaskId, newSubTask);
+                            break;
+                        default:
+                            return;
                     }
-                    manager.updateTask(changeTaskId, updatedName, updatedDescription, updatedStatus);
                     break;
+
                 case "5":
                     System.out.println("Введите id задачи, которую Вы хотите удалить:");
-                    manager.deleteTaskById(Integer.parseInt(scanner.nextLine().trim()));
+                    manager.deleteById(Integer.parseInt(scanner.nextLine().trim()));
                     break;
+
                 case "6":
                     manager.deleteAllTasks();
                     break;
+
                 case "7":
                     System.out.println("Введите id эпика, список подзадач которого Вы хотите получить:");
                     int epicId = Integer.parseInt(scanner.nextLine().trim());
                     manager.showSubTaskList(epicId);
                     break;
+
                 case "0":
                     return;
+
                 default:
                     System.out.println("Некорректная команда");
                     break;
