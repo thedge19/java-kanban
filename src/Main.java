@@ -1,11 +1,9 @@
+import enums.Status;
 import manager.TaskManager;
+import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
-import tasks.Epic;
-import enums.TaskType;
-import enums.Status;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
@@ -39,13 +37,13 @@ public class Main {
                     String taskType = manager.checkTypeById(taskId); // проверка типа задачи
                     switch (taskType) {
                         case "task":
-                            manager.showTask(taskId);
+                            manager.returnTask(taskId);
                             break;
                         case "epic":
-                            manager.showEpic(taskId);
+                            manager.returnEpic(taskId);
                             break;
                         case "subTask":
-                            manager.showSubTask(taskId);
+                            manager.returnSubTask(taskId);
                             break;
                         default:
                             return;
@@ -63,9 +61,7 @@ public class Main {
                             task.setName(scanner.nextLine().trim());
                             System.out.println("Введите описание задачи");
                             task.setDescription(scanner.nextLine().trim());
-                            task.setStatus(Status.NEW);
-                            task.setType(TaskType.TASK);
-                            manager.constructTask(task);
+                            manager.createTask(task);
                             break;
                         case 2:
                             Epic epic = new Epic();
@@ -73,10 +69,7 @@ public class Main {
                             epic.setName(scanner.nextLine().trim());
                             System.out.println("Введите описание эпика");
                             epic.setDescription(scanner.nextLine().trim());
-                            epic.setStatus(Status.NEW);
-                            epic.setType(TaskType.EPIC);
-                            epic.setSubTasksIds(new ArrayList<>());
-                            manager.constructEpic(epic);
+                            manager.createEpic(epic);
                             break;
                         case 3:
                             System.out.println("Введите номер эпика подзадачи:");
@@ -87,10 +80,8 @@ public class Main {
                                 subTask.setName(scanner.nextLine().trim());
                                 System.out.println("Введите описание подзадачи");
                                 subTask.setDescription(scanner.nextLine().trim());
-                                subTask.setStatus(Status.NEW);
-                                subTask.setType(TaskType.SUBTASK);
                                 subTask.setEpicId(epicId);
-                                manager.constructSubTask(subTask);
+                                manager.createSubTask(subTask);
                                 break;
                             }
                             break;
@@ -110,7 +101,8 @@ public class Main {
                     switch (updatedTaskType) {
                         case "task":
                             Task newTask = new Task();
-                            Task oldTask = manager.showTask(updateTaskId);
+                            Task oldTask = manager.returnTask(updateTaskId);
+                            newTask.setId(oldTask.getId());
                             System.out.println("Обновить наименование задачи? Да - введите 1, нет - любой другое число");
                             int taskUpdateNameAnswer = Integer.parseInt(scanner.nextLine().trim());
                             if (taskUpdateNameAnswer == 1) {
@@ -135,12 +127,12 @@ public class Main {
                             } else {
                                 newTask.setStatus(oldTask.getStatus());
                             }
-                            newTask.setType(TaskType.TASK);
-                            manager.updateTask(updateTaskId, newTask);
+                            manager.updateTask(newTask);
                             break;
                         case "epic":
                             Epic newEpic = new Epic();
-                            Epic oldEpic = manager.showEpic(updateTaskId);
+                            Epic oldEpic = manager.returnEpic(updateTaskId);
+                            newEpic.setId(oldEpic.getId());
                             System.out.println("Обновить наименование эпика? Да - введите 1, нет - любой другое число");
                             int epicUpdateNameAnswer = Integer.parseInt(scanner.nextLine().trim());
                             if (epicUpdateNameAnswer == 1) {
@@ -157,14 +149,12 @@ public class Main {
                             } else {
                                 newEpic.setDescription(oldEpic.getDescription());
                             }
-                            newEpic.setStatus(oldEpic.getStatus());
-                            newEpic.setSubTasksIds(oldEpic.getSubTasksIds());
-                            newEpic.setType(TaskType.EPIC);
-                            manager.updateEpic(updateTaskId, newEpic);
+                            manager.updateEpic(newEpic);
                             break;
                         case "subTask":
                             SubTask newSubTask = new SubTask();
-                            SubTask oldSubTask = manager.showSubTask(updateTaskId);
+                            SubTask oldSubTask = manager.returnSubTask(updateTaskId);
+                            newSubTask.setId(oldSubTask.getId());
                             System.out.println("Обновить наименование подзадачи? Да - введите 1, нет - любой другое число");
                             int subtaskUpdateNameAnswer = Integer.parseInt(scanner.nextLine().trim());
                             if (subtaskUpdateNameAnswer == 1) {
@@ -189,9 +179,8 @@ public class Main {
                             } else {
                                 newSubTask.setStatus(oldSubTask.getStatus());
                             }
-                            newSubTask.setType(TaskType.SUBTASK);
                             newSubTask.setEpicId(oldSubTask.getEpicId());
-                            manager.updateSubTask(updateTaskId, newSubTask);
+                            manager.updateSubTask(newSubTask);
                             break;
                         default:
                             return;
@@ -204,13 +193,25 @@ public class Main {
                     break;
 
                 case "6":
-                    manager.deleteAllTasks();
+                    System.out.println("Введите тип задачи, который Вы хотите удалить. 1 - task, 2 - epic, 3 - subtask");
+                    int taskTypeNumber = Integer.parseInt(scanner.nextLine().trim());
+                    switch (taskTypeNumber) {
+                        case 1:
+                            manager.deleteAllTasks();
+                            break;
+                        case 2:
+                            manager.deleteAllEpics();
+                            break;
+                        case 3:
+                            manager.deleteAllSubTasks();
+                            break;
+                    }
                     break;
 
                 case "7":
                     System.out.println("Введите id эпика, список подзадач которого Вы хотите получить:");
                     int epicId = Integer.parseInt(scanner.nextLine().trim());
-                    manager.showSubTaskList(epicId);
+                    manager.returnSubTaskList(epicId);
                     break;
 
                 case "0":

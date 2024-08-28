@@ -5,10 +5,12 @@ import enums.TaskType;
 
 public class Task {
 
-    protected String name;
-    protected String description;
-    protected Status status;
-    protected TaskType type;
+    private int id;
+    private String name;
+    private String description;
+    private Status status;
+    private final TaskType type = TaskType.TASK;
+
 
     public String getName() {
         return name;
@@ -34,7 +36,15 @@ public class Task {
         this.description = description;
     }
 
-    public void setType(TaskType type) {
-        this.type = type;
+    public TaskType getType() {
+        return type;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
