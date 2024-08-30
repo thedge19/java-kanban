@@ -83,8 +83,8 @@ public class TaskManager {
         int epicId = subTask.getEpicId();
         if (isEpicExist(epicId)) {// проверка существования эпика с заданным id
             epics.get(epicId).getSubTasksIds().add(id); // добавление идентификатора подзадачи в список связанного эпика
+            subTasks.put(id, subTask);
         }
-        subTasks.put(id, subTask);
     }
 
     // БЛОК ОБНОВЛЕНИЯ ЗАДАЧ
