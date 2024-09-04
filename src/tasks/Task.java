@@ -6,6 +6,14 @@ import enums.TaskType;
 public class Task {
 
     private int id;
+
+    public Task(int id, String name, String description, Status status) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+    }
+
     private String name;
     private String description;
     private Status status;
