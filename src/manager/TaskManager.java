@@ -7,6 +7,10 @@ import tasks.Task;
 import java.util.ArrayList;
 
 public interface TaskManager {
+
+    // Метод проверки пустоты хэшмапов
+    boolean tasksIsEmpty();
+
     // метод получения списка задач
     ArrayList<Task> getTasks();
 
@@ -27,6 +31,10 @@ public interface TaskManager {
     SubTask returnSubTask(int subTaskId);
 
     // БЛОК ДОБАВЛЕНИЯ ЗАДАЧ
+
+    // метод проверки наличия эпика перед созданием подзадачи
+    boolean isEpicExist(int epicId);
+
     // метод добавления задачи
     void createTask(Task task);
 
@@ -35,6 +43,9 @@ public interface TaskManager {
 
     // метод добавления подзадачи
     void createSubTask(SubTask subTask);
+
+    // Возвращение в main типа задачи
+    String checkTypeById(int taskId);
 
     // метод изменения задачи
     void updateTask(Task task);

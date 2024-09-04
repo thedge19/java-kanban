@@ -17,6 +17,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     // БЛОК ПОЛУЧЕНИЯ СПИСКОВ ЗАДАЧ
     // Метод проверки пустоты хэшмапов
+    @Override
     public boolean tasksIsEmpty() {
         return tasks.isEmpty() && epics.isEmpty() && subTasks.isEmpty();
     }
@@ -68,6 +69,7 @@ public class InMemoryTaskManager implements TaskManager {
         tasks.put(id, task);
     }
 
+    @Override
     // метод проверки наличия эпика перед созданием подзадачи
     public boolean isEpicExist(int epicId) {
         return epics.get(epicId) != null;
@@ -98,6 +100,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     // БЛОК ОБНОВЛЕНИЯ ЗАДАЧ
     // Возвращение в main типа задачи
+    @Override
     public String checkTypeById(int taskId) {
         if (tasks.get(taskId) != null) {
             return "task";

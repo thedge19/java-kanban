@@ -1,6 +1,7 @@
 import enums.Status;
 import manager.InMemoryHistoryManager;
-import manager.InMemoryTaskManager;
+import manager.Managers;
+import manager.TaskManager;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
@@ -12,7 +13,7 @@ public class Main {
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
-        InMemoryTaskManager manager = new InMemoryTaskManager();
+        TaskManager manager = Managers.getDefault();
         InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
         while (true) {
