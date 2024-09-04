@@ -16,6 +16,9 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public List<Task> getHistory() {
+        for (Task viewedTask : history) {
+            System.out.println(viewedTask.getName());
+        }
         return history;
     }
 }
