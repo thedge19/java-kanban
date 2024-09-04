@@ -1,4 +1,5 @@
 import enums.Status;
+import manager.InMemoryHistoryManager;
 import manager.TaskManager;
 import tasks.Epic;
 import tasks.SubTask;
@@ -12,6 +13,7 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
         TaskManager manager = new TaskManager();
+        InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
         while (true) {
             printMenu();
@@ -37,13 +39,16 @@ public class Main {
                     String taskType = manager.checkTypeById(taskId); // проверка типа задачи
                     switch (taskType) {
                         case "task":
-                            manager.returnTask(taskId);
+                            Task viewedTask = manager.returnTask(taskId);
+                            historyManager.addTask(viewedTask);
                             break;
                         case "epic":
-                            manager.returnEpic(taskId);
+                            Task viewedEpic = manager.returnEpic(taskId);
+                            historyManager.addTask(viewedEpic);
                             break;
                         case "subTask":
-                            manager.returnSubTask(taskId);
+                            Task viewedSubTask = manager.returnSubTask(taskId);
+                            historyManager.addTask(viewedSubTask);
                             break;
                         default:
                             return;
@@ -214,6 +219,10 @@ public class Main {
                     manager.returnSubTaskList(epicId);
                     break;
 
+                case "8":
+                    historyManager.getHistory();
+                    break;
+
                 case "0":
                     return;
 
@@ -234,6 +243,7 @@ public class Main {
         System.out.println("5 - Удалить задачу по идентификатору");
         System.out.println("6 - Удалить все задачи");
         System.out.println("7 - Получить все подзадачи эпика");
+        System.out.println("8 - Получить список просмотренных задач");
         System.out.println("0 - Выход");
     }
 
