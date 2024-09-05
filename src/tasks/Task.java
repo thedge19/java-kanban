@@ -6,6 +6,10 @@ import enums.TaskType;
 public class Task {
 
     private int id;
+    private String name;
+    private String description;
+    private Status status;
+    private final TaskType type = TaskType.TASK;
 
     public Task(int id, String name, String description, Status status) {
         this.id = id;
@@ -14,10 +18,6 @@ public class Task {
         this.status = status;
     }
 
-    private String name;
-    private String description;
-    private Status status;
-    private final TaskType type = TaskType.TASK;
 
 
     public String getName() {

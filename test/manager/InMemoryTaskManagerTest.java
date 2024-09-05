@@ -1,29 +1,100 @@
 package manager;
 
 import enums.Status;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import tasks.Epic;
+import tasks.SubTask;
 import tasks.Task;
-import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class InMemoryTaskManagerTest {
 
-    @Test
-    public void addNewTask() {
-        TaskManager taskManager = Managers.getDefault();
-        Task task = new Task(1, "Test addNewTask", "Test addNewTask description", Status.NEW);
-        taskManager.createTask(task);
-        int taskId = task.getId();
+    TaskManager testManager;
+    Epic epic;
+    Task task;
+    SubTask subTask1;
+    SubTask subTask2;
+    SubTask subTask3;
 
-        final Task savedTask = taskManager.returnTask(taskId);
+    @BeforeEach
+    public void beforeEach() {
+        testManager = Managers.getDefault();
+    }
+
+    @Test
+    public void addAndGetNewTask() {
+        task = new Task(1, "Test addNewTask", "Test addNewTask description", Status.NEW);
+        epic = new Epic(2, "Test addNewEpic", "Test addNewEpic description", Status.NEW, new ArrayList<>());
+        subTask1 = new SubTask(3, "Test addNewSubTask", "Test addNewSubTask description", Status.NEW, 2);
+
+        // 1. Возможность добавления задач разного типа
+        testManager.createTask(task);
+        final List<Task> tasks = testManager.getTasks();
+        assertEquals(1, tasks.size(), "Неверное количество задач.");
+        testManager.createEpic(epic);
+        final List<Epic> epics = testManager.getEpics();
+        assertEquals(1, epics.size(), "Неверное количество задач.");
+        testManager.createSubTask(subTask1);
+        final List<SubTask> subTasks = testManager.getSubTasks();
+        assertEquals(1, subTasks.size(), "Неверное количество задач.");
+
+        // 2. Возможность получения разных задач по id
+        int taskId = task.getId();
+        assertEquals(testManager.returnTask(taskId), task);
+        int epicId = epic.getId();
+        assertEquals(testManager.returnEpic(epicId), epic);
+        int subTask1Id = subTask1.getId();
+        assertEquals(testManager.returnSubTask(subTask1Id), subTask1);
+
+
+
+        final Task savedTask = testManager.returnTask(taskId);
 
         assertNotNull(savedTask, "Задача не найдена.");
         assertEquals(task, savedTask, "Задачи не совпадают.");
 
-        final List<Task> tasks = taskManager.getTasks();
 
         assertNotNull(tasks, "Задачи не возвращаются.");
-        assertEquals(1, tasks.size(), "Неверное количество задач.");
         assertEquals(task, tasks.getFirst(), "Задачи не совпадают.");
+    }
+
+    @Test
+    public void shouldSubtaskOwnEpic() {
+        epic = new Epic(1, "Test addNewEpic", "Test addNewEpic description", Status.NEW, new ArrayList<>());
+        testManager.createEpic(epic);
+
+        subTask1 = new SubTask(2, "Test addNewSubTask", "Test addNewSubTask description", Status.NEW, 1);
+        subTask2 = new SubTask(3, "Test addNewSubTask", "Test addNewSubTask description", Status.NEW, 1);
+        subTask3 = new SubTask(4, "Test addNewSubTask3", "Test addNewSubTask3 description", Status.NEW, 4);
+
+
+        testManager.createSubTask(subTask1);
+        testManager.createSubTask(subTask2);
+
+        // Добавление в качестве связанного эпика своего же id
+        testManager.createSubTask(subTask3);
+
+        Epic newEpic = testManager.getEpics().getFirst();
+        assertEquals(newEpic.getSubTasksIds().size(), 2);
+    }
+
+    @Test
+    public void shouldUnchangeableFields() {
+        task = new Task(1, "Test addNewTask", "Test addNewTask description", Status.NEW);
+        testManager.createTask(task);
+        final List<Task> tasks = testManager.getTasks();
+
+        Task addedTask = tasks.getFirst();
+
+        assertEquals(task.getId(), addedTask.getId());
+        assertEquals(task.getName(), addedTask.getName());
+        assertEquals(task.getDescription(), addedTask.getDescription());
+        assertEquals(task.getStatus(), addedTask.getStatus());
     }
 }

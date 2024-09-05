@@ -98,8 +98,15 @@ public class InMemoryTaskManager implements TaskManager {
         subTask.setId(id);
         int epicId = subTask.getEpicId();
         if (isEpicExist(epicId)) {// проверка существования эпика с заданным id
-            epics.get(epicId).getSubTasksIds().add(id); // добавление идентификатора подзадачи в список связанного эпика
+            addSubTaskIdToEpic(epicId, id);
             subTasks.put(id, subTask);
+        }
+    }
+
+    // добавление идентификатора подзадачи в список связанного эпика
+    private void addSubTaskIdToEpic(int epicId, int id) {
+        if (tasks.get(id) == null && epics.get(id) == null) {
+            epics.get(epicId).getSubTasksIds().add(id);
         }
     }
 

@@ -10,7 +10,7 @@ public class Epic extends Task {
     private final TaskType type = TaskType.EPIC;
     private ArrayList<Integer> subTasksIds;
 
-    public Epic(int id, String name, String description, Status status, ArrayList<Integer> subTasksIds) {
+    public Epic(Integer id, String name, String description, Status status, ArrayList<Integer> subTasksIds) {
         super(id, name, description, status);
         this.subTasksIds = subTasksIds;
     }
