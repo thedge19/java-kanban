@@ -40,9 +40,11 @@ class InMemoryTaskManagerTest {
         testManager.createEpic(epic);
         final List<Epic> epics = testManager.getEpics();
         assertEquals(1, epics.size(), "Неверное количество задач.");
+        assertEquals(epic, epics.getFirst()); // наследники класса Task равны друг другу, если равен их id
         testManager.createSubTask(subTask1);
         final List<SubTask> subTasks = testManager.getSubTasks();
         assertEquals(1, subTasks.size(), "Неверное количество задач.");
+        assertEquals(subTask1, subTasks.getFirst()); // наследники класса Task равны друг другу, если равен их id
 
         // 2. Возможность получения разных задач по id
         int taskId = task.getId();
@@ -96,5 +98,25 @@ class InMemoryTaskManagerTest {
         assertEquals(task.getName(), addedTask.getName());
         assertEquals(task.getDescription(), addedTask.getDescription());
         assertEquals(task.getStatus(), addedTask.getStatus());
+    }
+
+    @Test
+    public void shouldConflictAddingAndGeneratingIds() {
+        // Задача с заданным id
+        Task task1 = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
+        // Задача со сгенерированным id
+        Task task2 = new Task(2, "Test addNewTask", "Test addNewTask description", Status.NEW);
+        // Задача с заданным id
+        Task task3 = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
+
+        testManager.createTask(task1);
+        testManager.createTask(task2);
+        testManager.createTask(task3);
+
+        List<Task> savedList = testManager.getTasks();
+
+        assertEquals(savedList.getFirst().getId(), 1);
+        assertEquals(savedList.get(1).getId(), 2);
+        assertEquals(savedList.get(2).getId(), 3);
     }
 }

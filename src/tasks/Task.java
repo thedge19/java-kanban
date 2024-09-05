@@ -5,20 +5,24 @@ import enums.TaskType;
 
 public class Task {
 
-    private int id;
+    private Integer id;
     private String name;
     private String description;
     private Status status;
     private final TaskType type = TaskType.TASK;
 
-    public Task(int id, String name, String description, Status status) {
+    public Task(Integer id, String name, String description, Status status) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.status = status;
     }
 
-
+    public Task(String name, String description, Status status) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+    }
 
     public String getName() {
         return name;

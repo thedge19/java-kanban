@@ -67,7 +67,7 @@ public class Main {
                             String taskName =  scanner.nextLine().trim();
                             System.out.println("Введите описание задачи");
                             String taskDescription =  scanner.nextLine().trim();
-                            Task task = new Task(0, taskName, taskDescription, Status.NEW);
+                            Task task = new Task(null, taskName, taskDescription, Status.NEW);
                             manager.createTask(task);
                             break;
                         case 2:
@@ -75,7 +75,7 @@ public class Main {
                             String epicName = scanner.nextLine().trim();
                             System.out.println("Введите описание эпика");
                             String epicDescription = scanner.nextLine().trim();
-                            Epic epic = new Epic(0, epicName, epicDescription, Status.NEW, new ArrayList<>());
+                            Epic epic = new Epic(null, epicName, epicDescription, Status.NEW, new ArrayList<>());
                             manager.createEpic(epic);
                             break;
                         case 3:
@@ -86,7 +86,7 @@ public class Main {
                                 String subTaskName = scanner.nextLine().trim();
                                 System.out.println("Введите описание подзадачи");
                                 String subTaskDescription = scanner.nextLine().trim();
-                                SubTask subTask = new SubTask(0, subTaskName, subTaskDescription, Status.NEW, epicId);
+                                SubTask subTask = new SubTask(null, subTaskName, subTaskDescription, Status.NEW, epicId);
                                 manager.createSubTask(subTask);
                                 break;
                             }

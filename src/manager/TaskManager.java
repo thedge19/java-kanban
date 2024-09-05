@@ -69,6 +69,4 @@ public interface TaskManager {
 
     // БЛОК ПОЛУЧЕНИЯ ВСЕХ ПОДЗАДАЧ ЭПИКА
     ArrayList<SubTask> returnSubTaskList(int epicId);
-
-    void createTasks();
 }

@@ -25,27 +25,18 @@ public class InMemoryTaskManager implements TaskManager {
     // метод получения списка задач
     @Override
     public ArrayList<Task> getTasks() {
-        for (Task task : tasks.values()) {
-            System.out.println(task.getId() + " " + task.getName() + " " + " " + task.getStatus());
-        }
         return new ArrayList<>(tasks.values());
     }
 
     // метод получения списка эпиков
     @Override
     public ArrayList<Epic> getEpics() {
-        for (Epic epic : epics.values()) {
-            System.out.println(epic.getId() + " " + epic.getName() + " " + epic.getStatus() + epic.getSubTasksIds().toString());
-        }
         return new ArrayList<>(epics.values());
     }
 
     // метод получения списка подзадач
     @Override
     public ArrayList<SubTask> getSubTasks() {
-        for (SubTask subTask : subTasks.values()) {
-            System.out.println(subTask.getId() + " " + subTask.getName() + " " + subTask.getStatus() + " epic #" + subTask.getEpicId());
-        }
         return new ArrayList<>(subTasks.values());
     }
 
@@ -269,40 +260,5 @@ public class InMemoryTaskManager implements TaskManager {
             epicSubTasksList.add(subTask);
         }
         return epicSubTasksList;
-    }
-
-    @Override
-    public void createTasks() {
-        Task task1 = new Task(1,"task1", "task1", Status.NEW);
-        tasks.put(1, task1);
-
-        Task task2 = new Task(2, "task2", "task2", Status.NEW);
-        tasks.put(2, task2);
-
-        Epic epic1 = new Epic(3, "epic1", "epic1", Status.NEW, new ArrayList<>());
-        epics.put(3, epic1);
-
-        Epic epic2 = new Epic(4, "epic2", "epic2", Status.NEW, new ArrayList<>());
-        epics.put(4, epic2);
-
-        SubTask subTask1 = new SubTask(5, "subTask1", "subTask1", Status.NEW, 3);
-        epics.get(3).getSubTasksIds().add(5);
-        subTasks.put(5, subTask1);
-
-        SubTask subTask2 = new SubTask(6, "subTask2", "subTask2", Status.NEW, 3);
-        epics.get(3).getSubTasksIds().add(6);
-        subTasks.put(6, subTask2);
-
-        SubTask subTask3 = new SubTask(7, "subTask3", "subTask3", Status.NEW, 3);
-        epics.get(3).getSubTasksIds().add(7);
-        subTasks.put(7, subTask3);
-
-        SubTask subTask4 = new SubTask(8, "subTask4", "subTask4", Status.NEW, 4);
-        epics.get(4).getSubTasksIds().add(8);
-        subTasks.put(8, subTask4);
-
-        SubTask subTask5 = new SubTask(9, "subTask5", "subTask5", Status.NEW, 4);
-        epics.get(4).getSubTasksIds().add(9);
-        subTasks.put(9, subTask5);
     }
 }
