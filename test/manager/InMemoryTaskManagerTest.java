@@ -48,15 +48,15 @@ class InMemoryTaskManagerTest {
 
         // 2. Возможность получения разных задач по id
         int taskId = task.getId();
-        assertEquals(testManager.returnTask(taskId), task);
+        assertEquals(testManager.getTask(taskId), task);
         int epicId = epic.getId();
-        assertEquals(testManager.returnEpic(epicId), epic);
+        assertEquals(testManager.getEpic(epicId), epic);
         int subTask1Id = subTask1.getId();
-        assertEquals(testManager.returnSubTask(subTask1Id), subTask1);
+        assertEquals(testManager.getSubTask(subTask1Id), subTask1);
 
 
 
-        final Task savedTask = testManager.returnTask(taskId);
+        final Task savedTask = testManager.getTask(taskId);
 
         assertNotNull(savedTask, "Задача не найдена.");
         assertEquals(task, savedTask, "Задачи не совпадают.");

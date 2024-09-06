@@ -7,11 +7,17 @@ import tasks.Task;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final HashMap<Integer, Task> tasks = new HashMap<>();
-    private final HashMap<Integer, Epic> epics = new HashMap<>();
-    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    private final Map<Integer, Task> tasks = new HashMap<>();
+    private final Map<Integer, Epic> epics = new HashMap<>();
+    private final Map<Integer, SubTask> subTasks = new HashMap<>();
+
+    HistoryManager historyManager = Managers.getDefaultHistory();
+
+    private final List<Task> history = historyManager.getHistory();
 
     private int id = 0;
 
@@ -24,39 +30,45 @@ public class InMemoryTaskManager implements TaskManager {
 
     // метод получения списка задач
     @Override
-    public ArrayList<Task> getTasks() {
+    public List<Task> getTasks() {
         return new ArrayList<>(tasks.values());
     }
 
     // метод получения списка эпиков
     @Override
-    public ArrayList<Epic> getEpics() {
+    public List<Epic> getEpics() {
         return new ArrayList<>(epics.values());
     }
 
     // метод получения списка подзадач
     @Override
-    public ArrayList<SubTask> getSubTasks() {
+    public List<SubTask> getSubTasks() {
         return new ArrayList<>(subTasks.values());
     }
 
     // БЛОК ПОЛУЧЕНИЯ ЗАДАЧИ ПО ИДЕНТИФИКАТОРУ
     // метод получения задачи по идентификатору
     @Override
-    public Task returnTask(int taskId) {
-        return tasks.get(taskId);
+    public Task getTask(int taskId) {
+        Task gettingTask = tasks.get(taskId);
+        historyManager.addTask(gettingTask, history);
+        return gettingTask;
     }
 
     // метод получения эпика по идентификатору
     @Override
-    public Epic returnEpic(int epicId) {
-        return epics.get(epicId);
+    public Epic getEpic(int epicId) {
+        Epic gettingEpic = epics.get(epicId);
+        historyManager.addTask(gettingEpic, history);
+        return gettingEpic;
     }
 
     // метод получения подзадачи по идентификатору
     @Override
-    public SubTask returnSubTask(int subTaskId) {
-        return subTasks.get(subTaskId);
+    public SubTask getSubTask(int subTaskId) {
+        SubTask gettingSubTask = subTasks.get(subTaskId);
+        historyManager.addTask(gettingSubTask, history);
+        return gettingSubTask;
     }
 
     // БЛОК ДОБАВЛЕНИЯ ЗАДАЧ
@@ -252,7 +264,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     // БЛОК ПОЛУЧЕНИЯ ВСЕХ ПОДЗАДАЧ ЭПИКА
     @Override
-    public ArrayList<SubTask> returnSubTaskList(int epicId) {
+    public List<SubTask> returnSubTaskList(int epicId) {
         Epic epic = epics.get(epicId);
         ArrayList<SubTask> epicSubTasksList = new ArrayList<>();
         for (Integer subTaskId : epic.getSubTasksIds()) {
@@ -260,5 +272,13 @@ public class InMemoryTaskManager implements TaskManager {
             epicSubTasksList.add(subTask);
         }
         return epicSubTasksList;
+    }
+
+    // БЛОК ПОЛУЧЕНИЯ ИСТОРИИ ПРОСМОТРОВ
+    public List <Task> getHistory() {
+        for (Task task : history) {
+            System.out.println(task.getId() + " " + task.getName());
+        }
+        return history;
     }
 }

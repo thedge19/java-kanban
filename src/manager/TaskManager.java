@@ -5,6 +5,7 @@ import tasks.SubTask;
 import tasks.Task;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
 
@@ -12,23 +13,23 @@ public interface TaskManager {
     boolean tasksIsEmpty();
 
     // метод получения списка задач
-    ArrayList<Task> getTasks();
+    List<Task> getTasks();
 
     // метод получения списка эпиков
-    ArrayList<Epic> getEpics();
+    List<Epic> getEpics();
 
     // метод получения списка подзадач
-    ArrayList<SubTask> getSubTasks();
+    List<SubTask> getSubTasks();
 
     // БЛОК ПОЛУЧЕНИЯ ЗАДАЧИ ПО ИДЕНТИФИКАТОРУ
     // метод получения задачи по идентификатору
-    Task returnTask(int taskId);
+    Task getTask(int taskId);
 
     // метод получения эпика по идентификатору
-    Epic returnEpic(int epicId);
+    Epic getEpic(int epicId);
 
     // метод получения подзадачи по идентификатору
-    SubTask returnSubTask(int subTaskId);
+    SubTask getSubTask(int subTaskId);
 
     // БЛОК ДОБАВЛЕНИЯ ЗАДАЧ
 
@@ -68,5 +69,8 @@ public interface TaskManager {
     void deleteAllSubTasks();
 
     // БЛОК ПОЛУЧЕНИЯ ВСЕХ ПОДЗАДАЧ ЭПИКА
-    ArrayList<SubTask> returnSubTaskList(int epicId);
+    List<SubTask> returnSubTaskList(int epicId);
+
+    // БЛОК ПОЛУЧЕНИЯ ИСТОРИИ ПРОСМОТРОВ
+    List <Task> getHistory();
 }

@@ -1,5 +1,4 @@
 import enums.Status;
-import manager.InMemoryHistoryManager;
 import manager.Managers;
 import manager.TaskManager;
 import tasks.Epic;
@@ -15,7 +14,6 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
         TaskManager manager = Managers.getDefault();
-        InMemoryHistoryManager historyManager = new InMemoryHistoryManager();
 
         while (true) {
             printMenu();
@@ -41,16 +39,13 @@ public class Main {
                     String taskType = manager.checkTypeById(taskId); // проверка типа задачи
                     switch (taskType) {
                         case "task":
-                            Task viewedTask = manager.returnTask(taskId);
-                            historyManager.addTask(viewedTask);
+                            manager.getTask(taskId);
                             break;
                         case "epic":
-                            Task viewedEpic = manager.returnEpic(taskId);
-                            historyManager.addTask(viewedEpic);
+                            manager.getEpic(taskId);
                             break;
                         case "subTask":
-                            Task viewedSubTask = manager.returnSubTask(taskId);
-                            historyManager.addTask(viewedSubTask);
+                            manager.getSubTask(taskId);
                             break;
                         default:
                             return;
@@ -107,7 +102,7 @@ public class Main {
 
                     switch (updatedTaskType) {
                         case "task":
-                            Task oldTask = manager.returnTask(updateTaskId);
+                            Task oldTask = manager.getTask(updateTaskId);
                             int newTaskId = oldTask.getId();
                             String newTaskName = oldTask.getName();
                             String newTaskDescription = oldTask.getDescription();
@@ -134,7 +129,7 @@ public class Main {
                             manager.updateTask(newTask);
                             break;
                         case "epic":
-                            Epic oldEpic = manager.returnEpic(updateTaskId);
+                            Epic oldEpic = manager.getEpic(updateTaskId);
                             int newEpicId = oldEpic.getId();
                             String newEpicName = oldEpic.getName();
                             String newEpicDescription = oldEpic.getDescription();
@@ -156,7 +151,7 @@ public class Main {
                             manager.updateEpic(newEpic);
                             break;
                         case "subTask":
-                            SubTask oldSubTask = manager.returnSubTask(updateTaskId);
+                            SubTask oldSubTask = manager.getSubTask(updateTaskId);
                             int newSubTaskId = oldSubTask.getId();
                             String newSubTaskName = oldSubTask.getName();
                             String newSubTaskDescription = oldSubTask.getDescription();
@@ -216,7 +211,7 @@ public class Main {
                     break;
 
                 case "8":
-                    historyManager.getHistory();
+                    manager.getHistory();
                     break;
 
                 case "0":
