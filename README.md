@@ -19,3 +19,9 @@ Repository for homework project.
 * просмотренную задачу нужно добавить в историю <span style='color: green'> _- выполнено_</span>
 * чтобы не открывать доступ к private переменной, можно history обернуть в new ArrayList<>()  <span style='color: green'> _- выполнено_</span>
 * в этом интерфейсе не хватает метода getHistory() <span style='color: green'> _- выполнено_</span> 
+
+## Исправление замечаний второго ревью
+* верни хранилище  private final List<Task> history = new ArrayList<>(10);  обратно; этот метод тоже верни как был))   <span style='color: green'> _- всё возвернул_</span>
+* я писал обернуть history в new ArrayList<>(), т.е. сделать вот так return new ArrayList<>(history ) - это создает новый список на базе коллекции history, иными словами копию. И метод бы вернул копию, тем самым оставив оригинальный список недоступным для манипуляций. А сейчас вместо истории просмотров, пользователь всегда получает пустой список. <span style='color: green'> _- всё обернул_</span>
+* это хранилище здесь не нужно, его место в классе InMemoryHistoryManager  <span style='color: green'> _- нет хранилища такого больше_</span>
+* в этом методе нужно будет прокинуть результат одноименного метода из класса InMemoryHistoryManager  через переменную historyManager  <span style='color: green'> _- прокинул_</span>

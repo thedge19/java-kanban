@@ -16,7 +16,6 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Task> tasks = new HashMap<>();
     private final Map<Integer, Epic> epics = new HashMap<>();
     private final Map<Integer, SubTask> subTasks = new HashMap<>();
-    private final List<Task> history = historyManager.getHistory();
 
     private int id = 0;
 
@@ -50,7 +49,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Task getTask(int taskId) {
         Task gettingTask = tasks.get(taskId);
-        historyManager.addTask(gettingTask, history);
+        historyManager.addTask(gettingTask);
         return gettingTask;
     }
 
@@ -58,7 +57,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public Epic getEpic(int epicId) {
         Epic gettingEpic = epics.get(epicId);
-        historyManager.addTask(gettingEpic, history);
+        historyManager.addTask(gettingEpic);
         return gettingEpic;
     }
 
@@ -66,7 +65,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public SubTask getSubTask(int subTaskId) {
         SubTask gettingSubTask = subTasks.get(subTaskId);
-        historyManager.addTask(gettingSubTask, history);
+        historyManager.addTask(gettingSubTask);
         return gettingSubTask;
     }
 
@@ -275,6 +274,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     // БЛОК ПОЛУЧЕНИЯ ИСТОРИИ ПРОСМОТРОВ
     public List <Task> getHistory() {
-        return history;
+        for (Task task : historyManager.getHistory()) {
+            System.out.println(task.getId() + " " + task.getName());
+        }
+        return historyManager.getHistory();
     }
 }
