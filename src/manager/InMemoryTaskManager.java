@@ -11,12 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
+    HistoryManager historyManager = Managers.getDefaultHistory();
+
     private final Map<Integer, Task> tasks = new HashMap<>();
     private final Map<Integer, Epic> epics = new HashMap<>();
     private final Map<Integer, SubTask> subTasks = new HashMap<>();
-
-    HistoryManager historyManager = Managers.getDefaultHistory();
-
     private final List<Task> history = historyManager.getHistory();
 
     private int id = 0;
@@ -276,9 +275,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     // БЛОК ПОЛУЧЕНИЯ ИСТОРИИ ПРОСМОТРОВ
     public List <Task> getHistory() {
-        for (Task task : history) {
-            System.out.println(task.getId() + " " + task.getName());
-        }
         return history;
     }
 }
