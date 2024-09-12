@@ -11,13 +11,22 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    HistoryManager historyManager = Managers.getDefaultHistory();
 
-    private final Map<Integer, Task> tasks = new HashMap<>();
-    private final Map<Integer, Epic> epics = new HashMap<>();
-    private final Map<Integer, SubTask> subTasks = new HashMap<>();
+    private final HistoryManager historyManager;
 
-    private int id = 0;
+    private final Map<Integer, Task> tasks;
+    private final Map<Integer, Epic> epics;
+    private final Map<Integer, SubTask> subTasks;
+
+    public InMemoryTaskManager(HistoryManager historyManager) {
+        this.historyManager = historyManager;
+        this.tasks = new HashMap<>();
+        this.epics = new HashMap<>();
+        this.subTasks = new HashMap<>();
+    }
+
+
+    private int counter = 0;
 
     // БЛОК ПОЛУЧЕНИЯ СПИСКОВ ЗАДАЧ
     // Метод проверки пустоты хэшмапов
@@ -73,9 +82,9 @@ public class InMemoryTaskManager implements TaskManager {
     // метод добавления задачи
     @Override
     public void createTask(Task task) {
-        id += 1;
-        task.setId(id);
-        tasks.put(id, task);
+        counter += 1;
+        task.setId(counter);
+        tasks.put(counter, task);
     }
 
     @Override
@@ -87,20 +96,20 @@ public class InMemoryTaskManager implements TaskManager {
     // метод добавления эпика
     @Override
     public void createEpic(Epic epic) {
-        id += 1;
-        epic.setId(id);
-        epics.put(id, epic);
+        counter += 1;
+        epic.setId(counter);
+        epics.put(counter, epic);
     }
 
     // метод добавления подзадачи
     @Override
     public void createSubTask(SubTask subTask) {
-        id += 1;
-        subTask.setId(id);
+        counter += 1;
+        subTask.setId(counter);
         int epicId = subTask.getEpicId();
         if (isEpicExist(epicId)) {// проверка существования эпика с заданным id
-            addSubTaskIdToEpic(epicId, id);
-            subTasks.put(id, subTask);
+            addSubTaskIdToEpic(epicId, counter);
+            subTasks.put(counter, subTask);
         }
     }
 
