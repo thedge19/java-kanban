@@ -8,7 +8,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InMemoryHistoryManagerTest {
 
-    TaskManager testManager = new InMemoryTaskManager();
+    HistoryManager testHistoryManager = new InMemoryHistoryManager();
+    TaskManager testManager = new InMemoryTaskManager(testHistoryManager);
     Task task;
 
     @Test

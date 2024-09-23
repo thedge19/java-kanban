@@ -214,6 +214,9 @@ public class Main {
                     manager.getHistory();
                     break;
 
+                case "9":
+                    break;
+
                 case "0":
                     return;
 
@@ -235,6 +238,7 @@ public class Main {
         System.out.println("6 - Удалить все задачи");
         System.out.println("7 - Получить все подзадачи эпика");
         System.out.println("8 - Получить список просмотренных задач");
+        System.out.println("9 - Удалить задачу из истории просмотров");
         System.out.println("0 - Выход");
     }
 

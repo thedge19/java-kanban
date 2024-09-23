@@ -1,6 +1,7 @@
 package manager;
 
 import enums.Status;
+import node.Node;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
@@ -282,7 +283,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     // БЛОК ПОЛУЧЕНИЯ ИСТОРИИ ПРОСМОТРОВ
-    public List <Task> getHistory() {
+    public List<Task> getHistory() {
         for (Task task : historyManager.getHistory()) {
             System.out.println(task.getId() + " " + task.getName());
         }

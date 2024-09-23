@@ -3,6 +3,8 @@ package tasks;
 import enums.Status;
 import enums.TaskType;
 
+import java.util.Date;
+
 public class Task {
 
     private Integer id;
