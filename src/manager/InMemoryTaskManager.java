@@ -26,7 +26,6 @@ public class InMemoryTaskManager implements TaskManager {
         this.subTasks = new HashMap<>();
     }
 
-
     private int counter = 0;
 
     // БЛОК ПОЛУЧЕНИЯ СПИСКОВ ЗАДАЧ
@@ -82,7 +81,7 @@ public class InMemoryTaskManager implements TaskManager {
     // БЛОК ДОБАВЛЕНИЯ ЗАДАЧ
     // метод добавления задачи
     @Override
-    public void createTask(Task task) {
+    public void addTask(Task task) {
         counter += 1;
         task.setId(counter);
         tasks.put(counter, task);
@@ -96,7 +95,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     // метод добавления эпика
     @Override
-    public void createEpic(Epic epic) {
+    public void addEpic(Epic epic) {
         counter += 1;
         epic.setId(counter);
         epics.put(counter, epic);
@@ -104,7 +103,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     // метод добавления подзадачи
     @Override
-    public void createSubTask(SubTask subTask) {
+    public void addSubTask(SubTask subTask) {
         counter += 1;
         subTask.setId(counter);
         int epicId = subTask.getEpicId();
@@ -227,6 +226,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     // метод удаления типа по идентификатору
     private void deleteTaskById(int deleteTaskId) {
+
         tasks.remove(deleteTaskId);
     }
 
@@ -283,10 +283,17 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     // БЛОК ПОЛУЧЕНИЯ ИСТОРИИ ПРОСМОТРОВ
+    @Override
     public List<Task> getHistory() {
         for (Task task : historyManager.getHistory()) {
             System.out.println(task.getId() + " " + task.getName());
         }
         return historyManager.getHistory();
+    }
+
+    // БЛОК УДАЛЕНИЯ ЗАДАЧ ИЗ ИСТОРИИ ПРОСМОТРОВ
+    @Override
+    public void removeTaskFromHistory(int id) {
+        historyManager.remove(id);
     }
 }

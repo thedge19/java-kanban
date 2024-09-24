@@ -39,13 +39,13 @@ public interface TaskManager {
     boolean isEpicExist(int epicId);
 
     // метод добавления задачи
-    void createTask(Task task);
+    void addTask(Task task);
 
     // метод добавления эпика
-    void createEpic(Epic epic);
+    void addEpic(Epic epic);
 
     // метод добавления подзадачи
-    void createSubTask(SubTask subTask);
+    void addSubTask(SubTask subTask);
 
     // Возвращение в main типа задачи
     String checkTypeById(int taskId);
@@ -75,4 +75,7 @@ public interface TaskManager {
 
     // БЛОК ПОЛУЧЕНИЯ ИСТОРИИ ПРОСМОТРОВ
     List<Task> getHistory();
+
+    // БЛОК УДАЛЕНИЯ ЗАДАЧ ИЗ ИСТОРИИ ПРОСМОТРОВ
+    void removeTaskFromHistory(int id);
 }
