@@ -14,7 +14,6 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
         TaskManager manager = Managers.getDefault();
-        Creator creator = new Creator(manager); // удалить
 
         while (true) {
             printMenu();
@@ -27,10 +26,9 @@ public class Main {
                         System.out.println("* Список задач пуст *");
                         break;
                     } else {
-//                        manager.getTasks();
-//                        manager.getEpics();
-//                        manager.getSubTasks();
-                        creator.getTasks();
+                        manager.getTasks();
+                        manager.getEpics();
+                        manager.getSubTasks();
                     }
                     System.out.println();
                     break;
@@ -54,47 +52,46 @@ public class Main {
                     }
                     break;
                 case "3":
-//                    printTasksTypesMenu();
-//
-//                    int taskTypeId = Integer.parseInt(scanner.nextLine().trim()); // Вводится номер типа задачи
-//
-//                    switch (taskTypeId) {
-//                        case 1:
-//                            System.out.println("Введите наименование задачи");
-//                            String taskName =  scanner.nextLine().trim();
-//                            System.out.println("Введите описание задачи");
-//                            String taskDescription =  scanner.nextLine().trim();
-//                            Task task = new Task(null, taskName, taskDescription, Status.NEW);
-//                            manager.addTask(task);
-//                            break;
-//                        case 2:
-//                            System.out.println("Введите наименование эпика");
-//                            String epicName = scanner.nextLine().trim();
-//                            System.out.println("Введите описание эпика");
-//                            String epicDescription = scanner.nextLine().trim();
-//                            Epic epic = new Epic(null, epicName, epicDescription, Status.NEW, new ArrayList<>());
-//                            manager.addEpic(epic);
-//                            break;
-//                        case 3:
-//                            System.out.println("Введите номер эпика подзадачи:");
-//                            int epicId = Integer.parseInt(scanner.nextLine().trim());
-//                            if (manager.isEpicExist(epicId)) {
-//                                System.out.println("Введите наименование подзадачи");
-//                                String subTaskName = scanner.nextLine().trim();
-//                                System.out.println("Введите описание подзадачи");
-//                                String subTaskDescription = scanner.nextLine().trim();
-//                                SubTask subTask = new SubTask(null, subTaskName, subTaskDescription, Status.NEW, epicId);
-//                                manager.addSubTask(subTask);
-//                                break;
-//                            }
-//                            break;
-//                        case 0:
-//                            break;
-//                        default:
-//                            System.out.println("Некорректная команда");
-//                            return;
-//                    }
-                    creator.addTasks();
+                    printTasksTypesMenu();
+
+                    int taskTypeId = Integer.parseInt(scanner.nextLine().trim()); // Вводится номер типа задачи
+
+                    switch (taskTypeId) {
+                        case 1:
+                            System.out.println("Введите наименование задачи");
+                            String taskName =  scanner.nextLine().trim();
+                            System.out.println("Введите описание задачи");
+                            String taskDescription =  scanner.nextLine().trim();
+                            Task task = new Task(null, taskName, taskDescription, Status.NEW);
+                            manager.addTask(task);
+                            break;
+                        case 2:
+                            System.out.println("Введите наименование эпика");
+                            String epicName = scanner.nextLine().trim();
+                            System.out.println("Введите описание эпика");
+                            String epicDescription = scanner.nextLine().trim();
+                            Epic epic = new Epic(null, epicName, epicDescription, Status.NEW, new ArrayList<>());
+                            manager.addEpic(epic);
+                            break;
+                        case 3:
+                            System.out.println("Введите номер эпика подзадачи:");
+                            int epicId = Integer.parseInt(scanner.nextLine().trim());
+                            if (manager.isEpicExist(epicId)) {
+                                System.out.println("Введите наименование подзадачи");
+                                String subTaskName = scanner.nextLine().trim();
+                                System.out.println("Введите описание подзадачи");
+                                String subTaskDescription = scanner.nextLine().trim();
+                                SubTask subTask = new SubTask(null, subTaskName, subTaskDescription, Status.NEW, epicId);
+                                manager.addSubTask(subTask);
+                                break;
+                            }
+                            break;
+                        case 0:
+                            break;
+                        default:
+                            System.out.println("Некорректная команда");
+                            return;
+                    }
                     break;
 
                 case "4":
