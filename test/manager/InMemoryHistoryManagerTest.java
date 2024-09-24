@@ -17,7 +17,7 @@ class InMemoryHistoryManagerTest {
         testManager = Managers.getDefault();
 
         task = new Task(1, "Test addNewTask", "Test addNewTask description",Status.NEW);
-        testManager.createTask(task);
+        testManager.addTask(task);
 
         testManager.getTask(task.getId());
         testManager.getTask(task.getId());

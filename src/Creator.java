@@ -51,4 +51,16 @@ public class Creator {
             System.out.println(subTask.getId() + " " + subTask.getName() + " " + subTask.getStatus() + " " + subTask.getEpicId());
         }
     }
+
+    public void createHistory() {
+        manager.getEpic(4);
+        manager.getEpic(3);
+        manager.getTask(1);
+        manager.getTask(2);
+        manager.getSubTask(8);
+        manager.getSubTask(5);
+        manager.getSubTask(7);
+        manager.getSubTask(9);
+        manager.getSubTask(6);
+    }
 }

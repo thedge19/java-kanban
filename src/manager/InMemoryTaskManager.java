@@ -226,15 +226,17 @@ public class InMemoryTaskManager implements TaskManager {
 
     // метод удаления типа по идентификатору
     private void deleteTaskById(int deleteTaskId) {
-
+        removeTaskFromHistory(deleteTaskId);
         tasks.remove(deleteTaskId);
     }
 
     // метод удаления эпика по идентификатору
     private void deleteEpicById(int deleteEpicId) {
+        removeTaskFromHistory(deleteEpicId);
         Epic epic = epics.get(deleteEpicId);
         ArrayList<Integer> deletingEpicSubTasks = epic.getSubTasksIds();
         for (int subTaskId : deletingEpicSubTasks) { // удаление всех подзадач эпика
+            removeTaskFromHistory(subTaskId);
             subTasks.remove(subTaskId);
         }
         epics.remove(deleteEpicId);
@@ -245,6 +247,7 @@ public class InMemoryTaskManager implements TaskManager {
         SubTask subTask = subTasks.get(deleteSubTaskId);
         Epic epic = epics.get(subTask.getEpicId());
         epic.getSubTasksIds().remove((Integer) deleteSubTaskId); // удаление подзадачи из списка свяанного эпика
+        removeTaskFromHistory(deleteSubTaskId);
         subTasks.remove(deleteSubTaskId);
         updateEpicStatus(subTask.getEpicId()); // пересчёт статуса эпика
     }
@@ -252,21 +255,35 @@ public class InMemoryTaskManager implements TaskManager {
     // БЛОК УДАЛЕНИЯ ВСЕХ ЗАДАЧ
     @Override
     public void deleteAllTasks() {
+        for (int deletedTaskId : tasks.keySet()) {
+            historyManager.remove(deletedTaskId);
+        }
         tasks.clear();
     }
 
     @Override
     public void deleteAllEpics() {
+        for (int deletedEpicId : epics.keySet()) {
+            historyManager.remove(deletedEpicId);
+        }
         epics.clear();
+        clearAllSubTasksFromHistory();
         subTasks.clear(); // при удалении всех эпиков, подазадачи также перестают существовать
     }
 
     @Override
     public void deleteAllSubTasks() {
+        clearAllSubTasksFromHistory();
         subTasks.clear();
         for (int epicId : epics.keySet()) {
             epics.get(epicId).setSubTasksIds(new ArrayList<>());
             updateEpicStatus(epicId);
+        }
+    }
+
+    private void clearAllSubTasksFromHistory() { // удаление всех подзадач из истории
+        for (int deletedSubTaskId : subTasks.keySet()) {
+            historyManager.remove(deletedSubTaskId);
         }
     }
 
