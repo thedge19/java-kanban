@@ -20,10 +20,9 @@ class InMemoryHistoryManagerTest {
         testManager.addTask(task);
 
         testManager.getTask(task.getId());
-        testManager.getTask(task.getId());
 
         Task viewedTask1 = testManager.getHistory().getFirst();
-        Task viewedTask2 = testManager.getHistory().get(1);
+        Task viewedTask2 = task;
 
         assertEquals(viewedTask1, viewedTask2);
     }

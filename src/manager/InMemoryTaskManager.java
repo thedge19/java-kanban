@@ -301,7 +301,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     // БЛОК ПОЛУЧЕНИЯ ИСТОРИИ ПРОСМОТРОВ
     @Override
-    public List<Task> getHistory() {
+    public List<Task> getHistory() { // удалить
         for (Task task : historyManager.getHistory()) {
             System.out.println(task.getId() + " " + task.getName());
         }
