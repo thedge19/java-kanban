@@ -63,7 +63,7 @@ public class Main {
                             System.out.println("Введите описание задачи");
                             String taskDescription =  scanner.nextLine().trim();
                             Task task = new Task(null, taskName, taskDescription, Status.NEW);
-                            manager.addTask(task);
+                            manager.createTask(task);
                             break;
                         case 2:
                             System.out.println("Введите наименование эпика");
@@ -71,7 +71,7 @@ public class Main {
                             System.out.println("Введите описание эпика");
                             String epicDescription = scanner.nextLine().trim();
                             Epic epic = new Epic(null, epicName, epicDescription, Status.NEW, new ArrayList<>());
-                            manager.addEpic(epic);
+                            manager.createEpic(epic);
                             break;
                         case 3:
                             System.out.println("Введите номер эпика подзадачи:");
@@ -82,7 +82,7 @@ public class Main {
                                 System.out.println("Введите описание подзадачи");
                                 String subTaskDescription = scanner.nextLine().trim();
                                 SubTask subTask = new SubTask(null, subTaskName, subTaskDescription, Status.NEW, epicId);
-                                manager.addSubTask(subTask);
+                                manager.createSubTask(subTask);
                                 break;
                             }
                             break;
@@ -92,6 +92,7 @@ public class Main {
                             System.out.println("Некорректная команда");
                             return;
                     }
+//                    manager.createTasks();
                     break;
 
                 case "4":
@@ -213,12 +214,6 @@ public class Main {
                     manager.getHistory();
                     break;
 
-                case "9":
-                    System.out.println("Введите id задачи, которую Вы хотите удалить из истории просмотров");
-                    int deleteFromHistoryTaskId = Integer.parseInt(scanner.nextLine().trim());
-                    manager.removeTaskFromHistory(deleteFromHistoryTaskId);
-                    break;
-
                 case "0":
                     return;
 
@@ -240,7 +235,6 @@ public class Main {
         System.out.println("6 - Удалить все задачи");
         System.out.println("7 - Получить все подзадачи эпика");
         System.out.println("8 - Получить список просмотренных задач");
-        System.out.println("9 - Удалить задачу из истории просмотров");
         System.out.println("0 - Выход");
     }
 

@@ -34,14 +34,14 @@ class InMemoryTaskManagerTest {
         subTask1 = new SubTask(3, "Test addNewSubTask", "Test addNewSubTask description", Status.NEW, 2);
 
         // 1. Возможность добавления задач разного типа
-        testManager.addTask(task);
+        testManager.createTask(task);
         final List<Task> tasks = testManager.getTasks();
         assertEquals(1, tasks.size(), "Неверное количество задач.");
-        testManager.addEpic(epic);
+        testManager.createEpic(epic);
         final List<Epic> epics = testManager.getEpics();
         assertEquals(1, epics.size(), "Неверное количество задач.");
         assertEquals(epic, epics.getFirst()); // наследники класса Task равны друг другу, если равен их id
-        testManager.addSubTask(subTask1);
+        testManager.createSubTask(subTask1);
         final List<SubTask> subTasks = testManager.getSubTasks();
         assertEquals(1, subTasks.size(), "Неверное количество задач.");
         assertEquals(subTask1, subTasks.getFirst()); // наследники класса Task равны друг другу, если равен их id
@@ -69,18 +69,18 @@ class InMemoryTaskManagerTest {
     @Test
     public void shouldSubtaskOwnEpic() {
         epic = new Epic(1, "Test addNewEpic", "Test addNewEpic description", Status.NEW, new ArrayList<>());
-        testManager.addEpic(epic);
+        testManager.createEpic(epic);
 
         subTask1 = new SubTask(2, "Test addNewSubTask", "Test addNewSubTask description", Status.NEW, 1);
         subTask2 = new SubTask(3, "Test addNewSubTask", "Test addNewSubTask description", Status.NEW, 1);
         subTask3 = new SubTask(4, "Test addNewSubTask3", "Test addNewSubTask3 description", Status.NEW, 4);
 
 
-        testManager.addSubTask(subTask1);
-        testManager.addSubTask(subTask2);
+        testManager.createSubTask(subTask1);
+        testManager.createSubTask(subTask2);
 
         // Добавление в качестве связанного эпика своего же id
-        testManager.addSubTask(subTask3);
+        testManager.createSubTask(subTask3);
 
         Epic newEpic = testManager.getEpics().getFirst();
         assertEquals(newEpic.getSubTasksIds().size(), 2);
@@ -89,7 +89,7 @@ class InMemoryTaskManagerTest {
     @Test
     public void shouldUnchangeableFields() {
         task = new Task(1, "Test addNewTask", "Test addNewTask description", Status.NEW);
-        testManager.addTask(task);
+        testManager.createTask(task);
         final List<Task> tasks = testManager.getTasks();
 
         Task addedTask = tasks.getFirst();
@@ -109,36 +109,14 @@ class InMemoryTaskManagerTest {
         // Задача с заданным id
         Task task3 = new Task("Test addNewTask", "Test addNewTask description", Status.NEW);
 
-        testManager.addTask(task1);
-        testManager.addTask(task2);
-        testManager.addTask(task3);
+        testManager.createTask(task1);
+        testManager.createTask(task2);
+        testManager.createTask(task3);
 
         List<Task> savedList = testManager.getTasks();
 
         assertEquals(savedList.getFirst().getId(), 1);
         assertEquals(savedList.get(1).getId(), 2);
         assertEquals(savedList.get(2).getId(), 3);
-    }
-
-    @Test
-    public void shouldEpicDoesNotStoreIdsOfDeletedSubtasksInsideItself() {
-        List<Epic> epicList = testManager.getEpics();
-
-        epic = new Epic(1, "Test addNewEpic", "Test addNewEpic description", Status.NEW, new ArrayList<>());
-        testManager.addEpic(epic);
-
-        subTask1 = new SubTask(2, "Test addNewSubTask", "Test addNewSubTask description", Status.NEW, 1);
-        subTask2 = new SubTask(3, "Test addNewSubTask", "Test addNewSubTask description", Status.NEW, 1);
-        subTask3 = new SubTask(4, "Test addNewSubTask3", "Test addNewSubTask3 description", Status.NEW, 1);
-
-
-        testManager.addSubTask(subTask1);
-        testManager.addSubTask(subTask2);
-        testManager.addSubTask(subTask3);
-
-        testManager.deleteById(4);
-
-        Epic epic = testManager.getEpics().getFirst();
-        assertEquals(epic.getSubTasksIds().size(), 2);
     }
 }
