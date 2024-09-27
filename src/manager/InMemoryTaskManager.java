@@ -25,6 +25,7 @@ public class InMemoryTaskManager implements TaskManager {
         this.subTasks = new HashMap<>();
     }
 
+
     private int counter = 0;
 
     // БЛОК ПОЛУЧЕНИЯ СПИСКОВ ЗАДАЧ
@@ -80,7 +81,7 @@ public class InMemoryTaskManager implements TaskManager {
     // БЛОК ДОБАВЛЕНИЯ ЗАДАЧ
     // метод добавления задачи
     @Override
-    public void addTask(Task task) {
+    public void createTask(Task task) {
         counter += 1;
         task.setId(counter);
         tasks.put(counter, task);
@@ -94,7 +95,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     // метод добавления эпика
     @Override
-    public void addEpic(Epic epic) {
+    public void createEpic(Epic epic) {
         counter += 1;
         epic.setId(counter);
         epics.put(counter, epic);
@@ -102,7 +103,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     // метод добавления подзадачи
     @Override
-    public void addSubTask(SubTask subTask) {
+    public void createSubTask(SubTask subTask) {
         counter += 1;
         subTask.setId(counter);
         int epicId = subTask.getEpicId();
@@ -225,17 +226,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     // метод удаления типа по идентификатору
     private void deleteTaskById(int deleteTaskId) {
-        removeTaskFromHistory(deleteTaskId);
         tasks.remove(deleteTaskId);
     }
 
     // метод удаления эпика по идентификатору
     private void deleteEpicById(int deleteEpicId) {
-        removeTaskFromHistory(deleteEpicId);
         Epic epic = epics.get(deleteEpicId);
         ArrayList<Integer> deletingEpicSubTasks = epic.getSubTasksIds();
         for (int subTaskId : deletingEpicSubTasks) { // удаление всех подзадач эпика
-            removeTaskFromHistory(subTaskId);
             subTasks.remove(subTaskId);
         }
         epics.remove(deleteEpicId);
@@ -246,7 +244,6 @@ public class InMemoryTaskManager implements TaskManager {
         SubTask subTask = subTasks.get(deleteSubTaskId);
         Epic epic = epics.get(subTask.getEpicId());
         epic.getSubTasksIds().remove((Integer) deleteSubTaskId); // удаление подзадачи из списка свяанного эпика
-        removeTaskFromHistory(deleteSubTaskId);
         subTasks.remove(deleteSubTaskId);
         updateEpicStatus(subTask.getEpicId()); // пересчёт статуса эпика
     }
@@ -254,35 +251,21 @@ public class InMemoryTaskManager implements TaskManager {
     // БЛОК УДАЛЕНИЯ ВСЕХ ЗАДАЧ
     @Override
     public void deleteAllTasks() {
-        for (int deletedTaskId : tasks.keySet()) {
-            historyManager.remove(deletedTaskId);
-        }
         tasks.clear();
     }
 
     @Override
     public void deleteAllEpics() {
-        for (int deletedEpicId : epics.keySet()) {
-            historyManager.remove(deletedEpicId);
-        }
         epics.clear();
-        clearAllSubTasksFromHistory();
         subTasks.clear(); // при удалении всех эпиков, подазадачи также перестают существовать
     }
 
     @Override
     public void deleteAllSubTasks() {
-        clearAllSubTasksFromHistory();
         subTasks.clear();
         for (int epicId : epics.keySet()) {
             epics.get(epicId).setSubTasksIds(new ArrayList<>());
             updateEpicStatus(epicId);
-        }
-    }
-
-    private void clearAllSubTasksFromHistory() { // удаление всех подзадач из истории
-        for (int deletedSubTaskId : subTasks.keySet()) {
-            historyManager.remove(deletedSubTaskId);
         }
     }
 
@@ -299,17 +282,10 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     // БЛОК ПОЛУЧЕНИЯ ИСТОРИИ ПРОСМОТРОВ
-    @Override
-    public List<Task> getHistory() { // удалить
+    public List <Task> getHistory() {
         for (Task task : historyManager.getHistory()) {
             System.out.println(task.getId() + " " + task.getName());
         }
         return historyManager.getHistory();
-    }
-
-    // БЛОК УДАЛЕНИЯ ЗАДАЧ ИЗ ИСТОРИИ ПРОСМОТРОВ
-    @Override
-    public void removeTaskFromHistory(int id) {
-        historyManager.remove(id);
     }
 }
