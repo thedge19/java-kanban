@@ -122,8 +122,6 @@ class InMemoryTaskManagerTest {
 
     @Test
     public void shouldEpicDoesNotStoreIdsOfDeletedSubtasksInsideItself() {
-        List<Epic> epicList = testManager.getEpics();
-
         epic = new Epic(1, "Test addNewEpic", "Test addNewEpic description", Status.NEW, new ArrayList<>());
         testManager.addEpic(epic);
 
