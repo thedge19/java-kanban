@@ -27,10 +27,10 @@ class ManagersTest {
         epic = new Epic(2, "Test addNewEpic", "Test addNewEpic description", Status.NEW, new ArrayList<>());
         subTask1 = new SubTask(3, "Test addNewSubTask", "Test addNewSubTask description", Status.NEW, 2);
         subTask2 = new SubTask(4, "Test addNewSubTask", "Test addNewSubTask description", Status.NEW, 2);
-        tm.addTask(task);
-        tm.addEpic(epic);
-        tm.addSubTask(subTask1);
-        tm.addSubTask(subTask2);
+        tm.createTask(task);
+        tm.createEpic(epic);
+        tm.createSubTask(subTask1);
+        tm.createSubTask(subTask2);
     }
 
     @Test
