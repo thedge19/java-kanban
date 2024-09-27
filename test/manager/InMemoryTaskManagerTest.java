@@ -119,4 +119,26 @@ class InMemoryTaskManagerTest {
         assertEquals(savedList.get(1).getId(), 2);
         assertEquals(savedList.get(2).getId(), 3);
     }
+
+    @Test
+    public void shouldEpicDoesNotStoreIdsOfDeletedSubtasksInsideItself() {
+        List<Epic> epicList = testManager.getEpics();
+
+        epic = new Epic(1, "Test addNewEpic", "Test addNewEpic description", Status.NEW, new ArrayList<>());
+        testManager.addEpic(epic);
+
+        subTask1 = new SubTask(2, "Test addNewSubTask", "Test addNewSubTask description", Status.NEW, 1);
+        subTask2 = new SubTask(3, "Test addNewSubTask", "Test addNewSubTask description", Status.NEW, 1);
+        subTask3 = new SubTask(4, "Test addNewSubTask3", "Test addNewSubTask3 description", Status.NEW, 1);
+
+
+        testManager.addSubTask(subTask1);
+        testManager.addSubTask(subTask2);
+        testManager.addSubTask(subTask3);
+
+        testManager.deleteById(4);
+
+        Epic epic = testManager.getEpics().getFirst();
+        assertEquals(epic.getSubTasksIds().size(), 2);
+    }
 }
