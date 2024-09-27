@@ -106,7 +106,7 @@ public class InMemoryTaskManager implements TaskManager {
         counter += 1;
         subTask.setId(counter);
         int epicId = subTask.getEpicId();
-        if (isEpicExist(epicId)) {// проверка существования эпика с заданным id
+        if (isEpicExist(epicId)) {
             addSubTaskIdToEpic(epicId, counter);
             subTasks.put(counter, subTask);
         }
