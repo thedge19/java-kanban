@@ -14,7 +14,6 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (task == null) {
             return;
         }
-
         history.linkLast(task);
     }
 
