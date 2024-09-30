@@ -301,15 +301,11 @@ public class InMemoryTaskManager implements TaskManager {
     // БЛОК ПОЛУЧЕНИЯ ИСТОРИИ ПРОСМОТРОВ
     @Override
     public List<Task> getHistory() { // удалить
-        for (Task task : historyManager.getHistory()) {
-            System.out.println(task.getId() + " " + task.getName());
-        }
         return historyManager.getHistory();
     }
 
     // БЛОК УДАЛЕНИЯ ЗАДАЧ ИЗ ИСТОРИИ ПРОСМОТРОВ
-    @Override
-    public void removeTaskFromHistory(int id) {
+    private void removeTaskFromHistory(int id) {
         historyManager.remove(id);
     }
 }

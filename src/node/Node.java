@@ -4,12 +4,12 @@ import tasks.Task;
 
 import java.util.Objects;
 
-public class Node {
-    public Node prev;
+public class Node<T extends Task> {
+    public Node<T> prev;
     public final Task data;
-    public Node next;
+    public Node<T> next;
 
-    public Node(Node prev, Task data, Node next) {
+    public Node(Node<T> prev, Task data, Node<T> next) {
         this.prev = prev;
         this.data = data;
         this.next = next;
@@ -28,7 +28,7 @@ public class Node {
         if (obj == null || (obj.getClass() != getClass())) {
             return false;
         }
-        Node node = (Node) obj;
+        Node<T> node = (Node<T>) obj;
         return (prev.equals(node.prev)) &&
                 (data.equals(node.data)) &&
                 (next.equals(node.next));

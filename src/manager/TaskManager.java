@@ -72,7 +72,4 @@ public interface TaskManager {
 
     // БЛОК ПОЛУЧЕНИЯ ИСТОРИИ ПРОСМОТРОВ
     List<Task> getHistory();
-
-    // БЛОК УДАЛЕНИЯ ЗАДАЧ ИЗ ИСТОРИИ ПРОСМОТРОВ
-    void removeTaskFromHistory(int id);
 }

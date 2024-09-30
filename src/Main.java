@@ -213,12 +213,6 @@ public class Main {
                     manager.getHistory();
                     break;
 
-                case "9":
-                    System.out.println("Введите id задачи, которую Вы хотите удалить из истории просмотров");
-                    int deleteFromHistoryTaskId = Integer.parseInt(scanner.nextLine().trim());
-                    manager.removeTaskFromHistory(deleteFromHistoryTaskId);
-                    break;
-
                 case "0":
                     return;
 
@@ -240,7 +234,6 @@ public class Main {
         System.out.println("6 - Удалить все задачи");
         System.out.println("7 - Получить все подзадачи эпика");
         System.out.println("8 - Получить список просмотренных задач");
-        System.out.println("9 - Удалить задачу из истории просмотров");
         System.out.println("0 - Выход");
     }
 

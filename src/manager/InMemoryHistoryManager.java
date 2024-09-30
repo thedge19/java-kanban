@@ -30,16 +30,16 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     private static class NodeKeeperList {
-        private final Map<Integer, Node> historyMap = new HashMap<>();
-        private Node head;
-        private Node tail;
+        private final Map<Integer, Node<Task>> historyMap = new HashMap<>();
+        private Node<Task> head;
+        private Node<Task> tail;
 
         private void linkLast(Task task) {
             if (historyMap.containsKey(task.getId())) {
                 removeNode(historyMap.get(task.getId()));
             }
 
-            Node newNode = new Node(tail, task, null);
+            Node<Task> newNode = new Node<>(tail, task, null);
             if (tail == null) {
                 head = newNode;
             } else {
@@ -54,7 +54,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             removeNode(historyMap.get(taskId));
         }
 
-        private void removeNode(Node node) {
+        private void removeNode(Node<Task> node) {
             if (node.prev == null && node.next == null) { // Удаляем единственный элемент
                 head = null;
                 tail = null;
@@ -73,10 +73,10 @@ public class InMemoryHistoryManager implements HistoryManager {
         private List<Task> getTasks() {
             List<Task> tasks = new ArrayList<>();
             if (head != null) {
-                Node iterator = head;
-                while (iterator != null) {
-                    tasks.add(iterator.data);
-                    iterator = iterator.next;
+                Node<Task> node = head;
+                while (node != null) {
+                    tasks.add(node.data);
+                    node = node.next;
                 }
             }
             return tasks;
