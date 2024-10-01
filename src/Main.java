@@ -59,11 +59,11 @@ public class Main {
                     switch (taskTypeId) {
                         case 1:
                             System.out.println("Введите наименование задачи");
-                            String taskName =  scanner.nextLine().trim();
+                            String taskName = scanner.nextLine().trim();
                             System.out.println("Введите описание задачи");
-                            String taskDescription =  scanner.nextLine().trim();
+                            String taskDescription = scanner.nextLine().trim();
                             Task task = new Task(null, taskName, taskDescription, Status.NEW);
-                            manager.createTask(task);
+                            manager.addTask(task);
                             break;
                         case 2:
                             System.out.println("Введите наименование эпика");
@@ -71,7 +71,7 @@ public class Main {
                             System.out.println("Введите описание эпика");
                             String epicDescription = scanner.nextLine().trim();
                             Epic epic = new Epic(null, epicName, epicDescription, Status.NEW, new ArrayList<>());
-                            manager.createEpic(epic);
+                            manager.addEpic(epic);
                             break;
                         case 3:
                             System.out.println("Введите номер эпика подзадачи:");
@@ -82,7 +82,7 @@ public class Main {
                                 System.out.println("Введите описание подзадачи");
                                 String subTaskDescription = scanner.nextLine().trim();
                                 SubTask subTask = new SubTask(null, subTaskName, subTaskDescription, Status.NEW, epicId);
-                                manager.createSubTask(subTask);
+                                manager.addSubTask(subTask);
                                 break;
                             }
                             break;
@@ -92,7 +92,6 @@ public class Main {
                             System.out.println("Некорректная команда");
                             return;
                     }
-//                    manager.createTasks();
                     break;
 
                 case "4":
@@ -123,7 +122,7 @@ public class Main {
                             int taskUpdateStatusAnswer = Integer.parseInt(scanner.nextLine().trim());
                             if (taskUpdateStatusAnswer == 1) {
                                 System.out.println("Введите новый статус - IN_PROGRESS, DONE");
-                                newTaskStatus  = Status.valueOf(scanner.nextLine());
+                                newTaskStatus = Status.valueOf(scanner.nextLine());
                             }
                             Task newTask = new Task(newTaskId, newTaskName, newTaskDescription, newTaskStatus);
                             manager.updateTask(newTask);
