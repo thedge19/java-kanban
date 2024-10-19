@@ -24,7 +24,7 @@ class ManagersTest {
     public void beforeEach() {
         tm = Managers.getDefault();
         task = new Task(1, "Test addNewTask", "Test addNewTask description", Status.NEW);
-        epic = new Epic(2, "Test addNewEpic", "Test addNewEpic description", Status.NEW, new ArrayList<>());
+        epic = new Epic(2, "Test addNewEpic", "Test addNewEpic description", Status.NEW);
         subTask1 = new SubTask(3, "Test addNewSubTask", "Test addNewSubTask description", Status.NEW, 2);
         subTask2 = new SubTask(4, "Test addNewSubTask", "Test addNewSubTask description", Status.NEW, 2);
         tm.addTask(task);
@@ -51,7 +51,7 @@ class ManagersTest {
         ArrayList<Integer> subTaskIds = new ArrayList<>();
         subTaskIds.add(3);
         subTaskIds.add(4);
-        Epic updatedEpic = new Epic(2, "Test updateNewEpic", "Test updateNewEpic description", Status.NEW, subTaskIds);
+        Epic updatedEpic = new Epic(2, "Test updateNewEpic", "Test updateNewEpic description", Status.NEW);
         tm.updateEpic(updatedEpic);
         SubTask updatedSubTask1 = new SubTask(3, "Test updateNewSubTask1", "Test updateNewSubTask1 description", Status.IN_PROGRESS, 2);
         SubTask updatedSubTask2 = new SubTask(4, "Test updateNewSubTask2", "Test updateNewSubTask2 description", Status.DONE, 2);

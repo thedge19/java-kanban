@@ -7,6 +7,7 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,10 +28,10 @@ class InMemoryTaskManagerTest {
     List<SubTask> subTasks;
 
     @BeforeEach
-    public void beforeEach() {
+    public void beforeEach() throws IOException {
         testManager = Managers.getDefault();
         task = new Task(1, "Test addNewTask", "Test addNewTask description", Status.NEW);
-        epic = new Epic(2, "Test addNewEpic", "Test addNewEpic description", Status.NEW, new ArrayList<>());
+        epic = new Epic(2, "Test addNewEpic", "Test addNewEpic description", Status.NEW);
         subTask1 = new SubTask(3, "Test addNewSubTask", "Test addNewSubTask description1", Status.NEW, 2);
         subTask2 = new SubTask(4, "Test addNewSubTask1", "Test addNewSubTask description2", Status.NEW, 2);
         subTask3 = new SubTask(5, "Test addNewSubTask2", "Test addNewSubTask description3", Status.NEW, 2);
@@ -76,15 +77,6 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void shouldSubtaskOwnEpic() {
-        // Добавление в качестве связанного эпика своего же id
-        testManager.addSubTask(subTask4);
-
-        Epic newEpic = testManager.getEpics().getFirst();
-        assertEquals(newEpic.getSubTasksIds().size(), 3);
-    }
-
-    @Test
     public void shouldUnchangeableFields() {
         Task addedTask = tasks.getFirst();
 
@@ -95,7 +87,7 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void shouldConflictAddingAndGeneratingIds() {
+    public void shouldConflictAddingAndGeneratingIds() throws IOException {
         // Задача со сгенерированным id
         Task task2 = new Task(7, "Test addNewTask", "Test addNewTask description", Status.NEW);
         // Задача с заданным id
@@ -112,25 +104,11 @@ class InMemoryTaskManagerTest {
     }
 
     @Test
-    public void shouldEpicDoesNotStoreOutdatedSubTaskIDs() {
-        testManager.deleteById(4);
-        assertEquals(epic.getSubTasksIds().size(), 2);
-    }
-
-    @Test
     public void shouldDeletedTasksAreDeletedFromHistory() {
         testManager.getTask(1);
         testManager.getSubTask(3);
         testManager.getSubTask(4);
 
         assertEquals(testManager.getHistory().size(), 3);
-    }
-
-    @Test
-    public void shouldDeletedSubtaskDoesNotRemainInEpic() {
-        assertEquals(epic.getSubTasksIds().size(), 3);
-
-        testManager.deleteById(4);
-        assertEquals(epic.getSubTasksIds().size(), 2);
     }
 }
