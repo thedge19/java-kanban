@@ -3,8 +3,6 @@ package tasks;
 import enums.Status;
 import enums.TaskType;
 
-import java.util.ArrayList;
-
 public class Epic extends Task {
 
     private final TaskType type = TaskType.EPIC;

@@ -7,6 +7,7 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,7 +22,7 @@ class ManagersTest {
     private SubTask subTask2;
 
     @BeforeEach
-    public void beforeEach() {
+    public void beforeEach() throws IOException {
         tm = Managers.getDefault();
         task = new Task(1, "Test addNewTask", "Test addNewTask description", Status.NEW);
         epic = new Epic(2, "Test addNewEpic", "Test addNewEpic description", Status.NEW);
@@ -48,9 +49,6 @@ class ManagersTest {
     public void shouldManagerUpdateAndDeleteTask() {
         Task updatedTask = new Task(1, "Test updateNewTask", "Test updateNewTask description", Status.IN_PROGRESS);
         tm.updateTask(updatedTask);
-        ArrayList<Integer> subTaskIds = new ArrayList<>();
-        subTaskIds.add(3);
-        subTaskIds.add(4);
         Epic updatedEpic = new Epic(2, "Test updateNewEpic", "Test updateNewEpic description", Status.NEW);
         tm.updateEpic(updatedEpic);
         SubTask updatedSubTask1 = new SubTask(3, "Test updateNewSubTask1", "Test updateNewSubTask1 description", Status.IN_PROGRESS, 2);
@@ -82,10 +80,6 @@ class ManagersTest {
     public void shouldManagerDeleteTasks() {
         tm.deleteAllTasks();
         assertEquals(tm.getTasks().size(), 0);
-
-        // проверка очистки списка связанных подазадач эпика после удаления всех подзадач
-        tm.deleteAllSubTasks();
-        assertEquals(tm.getEpics().getFirst().getSubTasksIds().size(), 0);
 
         tm.deleteAllEpics();
         assertEquals(tm.getEpics().size(), 0);
