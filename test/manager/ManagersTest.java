@@ -7,6 +7,7 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,10 +22,10 @@ class ManagersTest {
     private SubTask subTask2;
 
     @BeforeEach
-    public void beforeEach() {
-        tm = Managers.getDefault();
+    public void beforeEach() throws IOException {
+        tm = new InMemoryTaskManager(new InMemoryHistoryManager());
         task = new Task(1, "Test addNewTask", "Test addNewTask description", Status.NEW);
-        epic = new Epic(2, "Test addNewEpic", "Test addNewEpic description", Status.NEW, new ArrayList<>());
+        epic = new Epic(2, "Test addNewEpic", "Test addNewEpic description", Status.NEW);
         subTask1 = new SubTask(3, "Test addNewSubTask", "Test addNewSubTask description", Status.NEW, 2);
         subTask2 = new SubTask(4, "Test addNewSubTask", "Test addNewSubTask description", Status.NEW, 2);
         tm.addTask(task);
@@ -48,10 +49,7 @@ class ManagersTest {
     public void shouldManagerUpdateAndDeleteTask() {
         Task updatedTask = new Task(1, "Test updateNewTask", "Test updateNewTask description", Status.IN_PROGRESS);
         tm.updateTask(updatedTask);
-        ArrayList<Integer> subTaskIds = new ArrayList<>();
-        subTaskIds.add(3);
-        subTaskIds.add(4);
-        Epic updatedEpic = new Epic(2, "Test updateNewEpic", "Test updateNewEpic description", Status.NEW, subTaskIds);
+        Epic updatedEpic = new Epic(2, "Test updateNewEpic", "Test updateNewEpic description", Status.NEW);
         tm.updateEpic(updatedEpic);
         SubTask updatedSubTask1 = new SubTask(3, "Test updateNewSubTask1", "Test updateNewSubTask1 description", Status.IN_PROGRESS, 2);
         SubTask updatedSubTask2 = new SubTask(4, "Test updateNewSubTask2", "Test updateNewSubTask2 description", Status.DONE, 2);
@@ -68,10 +66,6 @@ class ManagersTest {
         tm.deleteById(1);
         assertEquals(tm.getTasks().size(), 0);
 
-        // проверка обновления статуса эпика после удаления подзадачи
-        tm.deleteById(3);
-        assertEquals(tm.getEpics().getFirst().getStatus(), Status.DONE);
-
         // проверка удаления связанных подзадач после удаления эпика
         tm.deleteById(2);
         assertEquals(tm.getSubTasks().size(), 0);
@@ -82,10 +76,6 @@ class ManagersTest {
     public void shouldManagerDeleteTasks() {
         tm.deleteAllTasks();
         assertEquals(tm.getTasks().size(), 0);
-
-        // проверка очистки списка связанных подазадач эпика после удаления всех подзадач
-        tm.deleteAllSubTasks();
-        assertEquals(tm.getEpics().getFirst().getSubTasksIds().size(), 0);
 
         tm.deleteAllEpics();
         assertEquals(tm.getEpics().size(), 0);

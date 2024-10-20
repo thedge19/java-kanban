@@ -6,8 +6,8 @@ public class Managers {
 
     }
 
-    public static TaskManager getDefault() {
-        return new InMemoryTaskManager(new InMemoryHistoryManager());
+    public static FileBackedTaskManager getDefault() {
+        return new FileBackedTaskManager(getDefaultHistory());
     }
 
     public static HistoryManager getDefaultHistory() {
