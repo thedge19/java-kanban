@@ -54,7 +54,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
     }
 
-
     @Override
     public void addTask(Task task) {
         super.addTask(task);
@@ -70,6 +69,48 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void addSubTask(SubTask subTask) {
         super.addSubTask(subTask);
+        save();
+    }
+
+    @Override
+    public void updateTask(Task task) {
+        super.updateTask(task);
+        save();
+    }
+
+    @Override
+    public void updateEpic(Epic epic) {
+        super.updateEpic(epic);
+        save();
+    }
+
+    @Override
+    public void updateSubTask(SubTask subTask) {
+        super.updateSubTask(subTask);
+        save();
+    }
+
+    @Override
+    public void deleteById(int deleteId) {
+        super.deleteById(deleteId);
+        save();
+    }
+
+    @Override
+    public void deleteAllTasks() {
+        super.deleteAllTasks();
+        save();
+    }
+
+    @Override
+    public void deleteAllEpics() {
+        super.deleteAllEpics();
+        save();
+    }
+
+    @Override
+    public void deleteAllSubTasks() {
+        super.deleteAllSubTasks();
         save();
     }
 
@@ -96,6 +137,8 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                     epics.put(id, loadedEpic);
                 } else if (Objects.equals(taskValues[1], "SUBTASK")) {
                     SubTask loadedSubTask = taskConverter.subTaskFromArray(taskValues);
+                    Epic epic = getEpic(loadedSubTask.getEpicId());
+                    epic.addSubTaskId(loadedSubTask.getId());
                     subTasks.put(id, loadedSubTask);
                 }
                 if (maxId < id) {

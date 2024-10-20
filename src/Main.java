@@ -1,20 +1,30 @@
 import enums.Status;
 import manager.FileBackedTaskManager;
+import manager.Managers;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         Scanner scanner = new Scanner(System.in);
-        FileBackedTaskManager manager;
+        FileBackedTaskManager manager = Managers.getDefault();
 
-        manager = FileBackedTaskManager.loadFromFile(new File("testFile.csv"));
+        File file = new File("testFile.csv");
+
+        if (file.exists()) {
+            manager = FileBackedTaskManager.loadFromFile(new File("testFile.csv"));
+        } else {
+            Files.createFile(Paths.get("testFile.csv"));
+        }
 
         while (true) {
             printMenu();

@@ -37,27 +37,18 @@ public class InMemoryTaskManager implements TaskManager {
     // метод получения списка задач
     @Override
     public List<Task> getTasks() {
-        for (Task task : tasks.values()) {
-            System.out.println(task.getId() + " " + task.getName());
-        }
         return new ArrayList<>(tasks.values());
     }
 
     // метод получения списка эпиков
     @Override
     public List<Epic> getEpics() {
-        for (Epic epic : epics.values()) {
-            System.out.println(epic.getId() + " " + epic.getName());
-        }
         return new ArrayList<>(epics.values());
     }
 
     // метод получения списка подзадач
     @Override
     public List<SubTask> getSubTasks() {
-        for (SubTask subTask : subTasks.values()) {
-            System.out.println(subTask.getId() + " " + subTask.getName() + " " + subTask.getEpicId());
-        }
         return new ArrayList<>(subTasks.values());
     }
 
@@ -115,6 +106,8 @@ public class InMemoryTaskManager implements TaskManager {
         counter += 1;
         subTask.setId(counter);
         int epicId = subTask.getEpicId();
+        Epic epic = epics.get(epicId);
+        epic.addSubTaskId(counter);
         if (isEpicExist(epicId)) {
             subTasks.put(counter, subTask);
         }
@@ -237,10 +230,12 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     // метод удаления подзадачи по идентификатору
-    private void deleteSubTaskById(int deleteSubTaskId) {
-        SubTask subTask = subTasks.get(deleteSubTaskId);
-        removeTaskFromHistory(deleteSubTaskId);
-        subTasks.remove(deleteSubTaskId);
+    private void deleteSubTaskById(int deletedSubTaskId) {
+        SubTask subTask = subTasks.get(deletedSubTaskId);
+        removeTaskFromHistory(deletedSubTaskId);
+        subTasks.remove(deletedSubTaskId);
+        Epic epic = epics.get(subTask.getEpicId());
+        epic.deleteSubTaskId(deletedSubTaskId);
         updateEpicStatus(subTask.getEpicId()); // пересчёт статуса эпика
     }
 
@@ -291,10 +286,6 @@ public class InMemoryTaskManager implements TaskManager {
     // БЛОК ПОЛУЧЕНИЯ ИСТОРИИ ПРОСМОТРОВ
     @Override
     public List<Task> getHistory() {
-        List<Task> history = historyManager.getHistory();
-        for (Task task : history) {
-            System.out.println(task.getId() + " " + task.getName());
-        }
         return historyManager.getHistory();
     }
 
