@@ -18,4 +18,7 @@ public class SubTask extends Task {
         return epicId;
     }
 
+    public TaskType getType() {
+        return type;
+    }
 }

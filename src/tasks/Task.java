@@ -12,6 +12,8 @@ public class Task {
     private final TaskType type = TaskType.TASK;
     private Integer epicId;
 
+    public Task() {}
+
     public Task(Integer id, String name, String description, Status status) {
         this.id = id;
         this.name = name;

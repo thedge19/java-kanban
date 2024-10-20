@@ -14,9 +14,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     private final HistoryManager historyManager;
 
-    private final Map<Integer, Task> tasks;
-    private final Map<Integer, Epic> epics;
-    private final Map<Integer, SubTask> subTasks;
+    protected final Map<Integer, Task> tasks;
+    protected final Map<Integer, Epic> epics;
+    protected final Map<Integer, SubTask> subTasks;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
@@ -25,7 +25,7 @@ public class InMemoryTaskManager implements TaskManager {
         this.subTasks = new HashMap<>();
     }
 
-    private int counter = 0;
+    protected int counter = 0;
 
     // БЛОК ПОЛУЧЕНИЯ СПИСКОВ ЗАДАЧ
     // Метод проверки пустоты хэшмапов
@@ -37,18 +37,27 @@ public class InMemoryTaskManager implements TaskManager {
     // метод получения списка задач
     @Override
     public List<Task> getTasks() {
+        for (Task task : tasks.values()) {
+            System.out.println(task.getId() + " " + task.getName());
+        }
         return new ArrayList<>(tasks.values());
     }
 
     // метод получения списка эпиков
     @Override
     public List<Epic> getEpics() {
+        for (Epic epic : epics.values()) {
+            System.out.println(epic.getId() + " " + epic.getName());
+        }
         return new ArrayList<>(epics.values());
     }
 
     // метод получения списка подзадач
     @Override
     public List<SubTask> getSubTasks() {
+        for (SubTask subTask : subTasks.values()) {
+            System.out.println(subTask.getId() + " " + subTask.getName() + " " + subTask.getEpicId());
+        }
         return new ArrayList<>(subTasks.values());
     }
 
@@ -281,7 +290,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     // БЛОК ПОЛУЧЕНИЯ ИСТОРИИ ПРОСМОТРОВ
     @Override
-    public List<Task> getHistory() { // удалить
+    public List<Task> getHistory() {
+        List<Task> history = historyManager.getHistory();
+        for (Task task : history) {
+            System.out.println(task.getId() + " " + task.getName());
+        }
         return historyManager.getHistory();
     }
 

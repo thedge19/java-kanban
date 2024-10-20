@@ -1,19 +1,20 @@
 import enums.Status;
 import manager.FileBackedTaskManager;
-import manager.Managers;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
-        FileBackedTaskManager manager = Managers.getDefault();
+        FileBackedTaskManager manager;
+
+        manager = FileBackedTaskManager.loadFromFile(new File("testFile.csv"));
 
         while (true) {
             printMenu();
