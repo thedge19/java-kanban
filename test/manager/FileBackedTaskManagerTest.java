@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,15 +24,12 @@ public class FileBackedTaskManagerTest {
     SubTask subTask1;
     SubTask subTask2;
     SubTask subTask3;
-    SubTask subTask4;
-    List<SubTask> subTasks;
 
     public FileBackedTaskManagerTest() throws IOException {
     }
 
     @BeforeEach
-    public void beforeEach() throws IOException {
-
+    public void beforeEach() {
         manager = new FileBackedTaskManager(file);
 
         task = new Task(1, "Test addNewTask", "Test addNewTask description", Status.NEW);
@@ -41,11 +37,10 @@ public class FileBackedTaskManagerTest {
         subTask1 = new SubTask(3, "Test addNewSubTask", "Test addNewSubTask description1", Status.NEW, 2);
         subTask2 = new SubTask(4, "Test addNewSubTask1", "Test addNewSubTask description2", Status.NEW, 2);
         subTask3 = new SubTask(5, "Test addNewSubTask2", "Test addNewSubTask description3", Status.NEW, 2);
-
     }
 
     @Test
-    public void shouldCorrectlySave() throws IOException {
+    public void shouldCorrectlySave() {
         manager.addTask(task);
         try (final FileReader reader = new FileReader(file, UTF_8); final BufferedReader bR = new BufferedReader(reader)) {
             bR.readLine();
@@ -57,7 +52,7 @@ public class FileBackedTaskManagerTest {
     }
 
     @Test
-    public void shouldCorrectlyRead() throws IOException {
+    public void shouldCorrectlyRead() {
         manager.addTask(task);
         FileBackedTaskManager.loadFromFile(file);
         try (final FileReader reader = new FileReader(file, UTF_8); final BufferedReader bR = new BufferedReader(reader)) {
@@ -67,7 +62,5 @@ public class FileBackedTaskManagerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
 }
