@@ -28,7 +28,7 @@ class InMemoryTaskManagerTest {
 
     @BeforeEach
     public void beforeEach() throws IOException {
-        testManager = Managers.getDefault();
+        testManager = new InMemoryTaskManager(new InMemoryHistoryManager());
         task = new Task(1, "Test addNewTask", "Test addNewTask description", Status.NEW);
         epic = new Epic(2, "Test addNewEpic", "Test addNewEpic description", Status.NEW);
         subTask1 = new SubTask(3, "Test addNewSubTask", "Test addNewSubTask description1", Status.NEW, 2);

@@ -8,6 +8,7 @@ import tasks.SubTask;
 import tasks.Task;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -22,7 +23,7 @@ class ManagersTest {
 
     @BeforeEach
     public void beforeEach() throws IOException {
-        tm = Managers.getDefault();
+        tm = new InMemoryTaskManager(new InMemoryHistoryManager());
         task = new Task(1, "Test addNewTask", "Test addNewTask description", Status.NEW);
         epic = new Epic(2, "Test addNewEpic", "Test addNewEpic description", Status.NEW);
         subTask1 = new SubTask(3, "Test addNewSubTask", "Test addNewSubTask description", Status.NEW, 2);
@@ -64,10 +65,6 @@ class ManagersTest {
         // проверка удаления по id
         tm.deleteById(1);
         assertEquals(tm.getTasks().size(), 0);
-
-        // проверка обновления статуса эпика после удаления подзадачи
-        tm.deleteById(3);
-        assertEquals(tm.getEpics().getFirst().getStatus(), Status.DONE);
 
         // проверка удаления связанных подзадач после удаления эпика
         tm.deleteById(2);

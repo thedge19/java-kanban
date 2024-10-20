@@ -7,8 +7,6 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
-import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class InMemoryHistoryManagerTest {
@@ -27,9 +25,7 @@ class InMemoryHistoryManagerTest {
     SubTask subTask4;
 
     @BeforeEach
-    public void beforeEach() throws IOException {
-        testManager = Managers.getDefault();
-
+    public void beforeEach() {
         task1 = new Task(1, "Test addNewTask 1", "Test addNewTask description 1", Status.NEW);
         task2 = new Task(2, "Test addNewTask 2", "Test addNewTask description 2", Status.NEW);
         task3 = new Task(3, "Test addNewTask 3", "Test addNewTask description 3", Status.NEW);
