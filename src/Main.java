@@ -16,14 +16,17 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         Scanner scanner = new Scanner(System.in);
-        FileBackedTaskManager manager = Managers.getDefault();
 
-        File file = new File("testFile.csv");
+        System.out.println("Введите имя файла:");
+        String filename = scanner.nextLine();
 
+        File file = new File(filename + ".csv");
+
+        FileBackedTaskManager manager = Managers.getDefault(file);
         if (file.exists()) {
-            manager = FileBackedTaskManager.loadFromFile(new File("testFile.csv"));
+            manager = FileBackedTaskManager.loadFromFile(file);
         } else {
-            Files.createFile(Paths.get("testFile.csv"));
+            Files.createFile(Paths.get(filename + ".csv"));
         }
 
         while (true) {

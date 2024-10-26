@@ -13,7 +13,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
 
-    TaskConverter taskConverter;
+    private TaskConverter taskConverter;
     private final File file;
 
     public FileBackedTaskManager(File file) {
@@ -21,15 +21,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         taskConverter = new TaskConverter();
     }
 
-    public FileBackedTaskManager(HistoryManager historyManager) {
-        this(historyManager, new File("testFile.csv"));
-    }
-
     public FileBackedTaskManager(HistoryManager historyManager, File file) {
         super(historyManager);
         this.file = file;
+        taskConverter = new TaskConverter();
     }
-
 
     public static FileBackedTaskManager loadFromFile(File file) {
         FileBackedTaskManager fileBackedTaskManager = new FileBackedTaskManager(file);
@@ -37,7 +33,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         return fileBackedTaskManager;
     }
 
-    public void save() {
+    private void save() {
         try (final BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.append("id,type,name,status,description,epic\n");
             for (Task task : tasks.values()) {
