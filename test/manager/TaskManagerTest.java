@@ -23,7 +23,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     SubTask subTask;
 
     @BeforeEach
-    void setUp() throws IOException {
+    void setUp() {
         manager = getManager();
         task = new Task(1, "task", "task", Status.NEW);
         epic = new Epic(2, "epic", "epic", Status.NEW);
