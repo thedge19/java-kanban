@@ -23,7 +23,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<InMemoryTaskManag
     }
 
     @Test
-    public void shouldCorrectlySave() {
+    void shouldCorrectlySaveAndRead() {
         try (final FileReader reader = new FileReader(file, UTF_8); final BufferedReader bR = new BufferedReader(reader)) {
             bR.readLine();
             String line = bR.readLine();
@@ -32,17 +32,4 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<InMemoryTaskManag
             e.printStackTrace();
         }
     }
-
-    @Test
-    public void shouldCorrectlyRead() {
-        FileBackedTaskManager.loadFromFile(file);
-        try (final FileReader reader = new FileReader(file, UTF_8); final BufferedReader bR = new BufferedReader(reader)) {
-            bR.readLine();
-            String line = bR.readLine();
-            assertEquals(line, "1,TASK,task,NEW,task");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }
