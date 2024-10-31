@@ -1,19 +1,33 @@
 import enums.Status;
+import manager.FileBackedTaskManager;
 import manager.Managers;
-import manager.TaskManager;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         Scanner scanner = new Scanner(System.in);
-        TaskManager manager = Managers.getDefault();
+
+        System.out.println("Введите имя файла:");
+        String filename = scanner.nextLine();
+
+        File file = new File(filename + ".csv");
+
+        FileBackedTaskManager manager = Managers.getDefault(file);
+        if (file.exists()) {
+            manager = FileBackedTaskManager.loadFromFile(file);
+        } else {
+            Files.createFile(Paths.get(filename + ".csv"));
+        }
 
         while (true) {
             printMenu();
@@ -51,6 +65,7 @@ public class Main {
                             return;
                     }
                     break;
+
                 case "3":
                     printTasksTypesMenu();
 
@@ -70,7 +85,7 @@ public class Main {
                             String epicName = scanner.nextLine().trim();
                             System.out.println("Введите описание эпика");
                             String epicDescription = scanner.nextLine().trim();
-                            Epic epic = new Epic(null, epicName, epicDescription, Status.NEW, new ArrayList<>());
+                            Epic epic = new Epic(null, epicName, epicDescription, Status.NEW);
                             manager.addEpic(epic);
                             break;
                         case 3:
@@ -133,7 +148,6 @@ public class Main {
                             String newEpicName = oldEpic.getName();
                             String newEpicDescription = oldEpic.getDescription();
                             Status newEpicStatus = oldEpic.getStatus();
-                            ArrayList<Integer> newSubTasksIds = oldEpic.getSubTasksIds();
                             System.out.println("Обновить наименование эпика? Да - введите 1, нет - любой другое число");
                             int epicUpdateNameAnswer = Integer.parseInt(scanner.nextLine().trim());
                             if (epicUpdateNameAnswer == 1) {
@@ -146,7 +160,7 @@ public class Main {
                                 System.out.println("Введите новое описание эпика:");
                                 newEpicDescription = scanner.nextLine().trim();
                             }
-                            Epic newEpic = new Epic(newEpicId, newEpicName, newEpicDescription, newEpicStatus, newSubTasksIds);
+                            Epic newEpic = new Epic(newEpicId, newEpicName, newEpicDescription, newEpicStatus);
                             manager.updateEpic(newEpic);
                             break;
                         case "subTask":

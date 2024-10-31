@@ -5,29 +5,25 @@ import enums.TaskType;
 
 public class SubTask extends Task {
 
-    private int epicId;
     private final TaskType type = TaskType.SUBTASK;
+    private final Integer epicId;
 
-    public SubTask(Integer id, String name, String description, Status status, int epicId) {
+    public SubTask(Integer id, String name, String description, Status status, Integer epicId) {
         super(id, name, description, status);
         this.epicId = epicId;
     }
 
-    public SubTask(String name, String description, Status status, int epicId) {
+    public SubTask(String name, String description, Status status, Integer epicId) {
         super(name, description, status);
         this.epicId = epicId;
     }
 
-    public int getEpicId() {
+    @Override
+    public Integer getEpicId() {
         return epicId;
     }
 
-    @Override
     public TaskType getType() {
         return type;
-    }
-
-    public void setEpicId(int epicId) {
-        this.epicId = epicId;
     }
 }
