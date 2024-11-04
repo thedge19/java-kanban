@@ -1,6 +1,7 @@
 import enums.Status;
 import manager.FileBackedTaskManager;
 import manager.Managers;
+import services.TimeConverter;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
@@ -9,13 +10,17 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Main {
 
+    static TimeConverter tc = new TimeConverter();
+    static Scanner scanner = new Scanner(System.in);
+
     public static void main(String[] args) throws IOException {
 
-        Scanner scanner = new Scanner(System.in);
 
         System.out.println("Введите имя файла:");
         String filename = scanner.nextLine();
@@ -23,6 +28,8 @@ public class Main {
         File file = new File(filename + ".csv");
 
         FileBackedTaskManager manager = Managers.getDefault(file);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm");
+
         if (file.exists()) {
             manager = FileBackedTaskManager.loadFromFile(file);
         } else {
@@ -70,34 +77,50 @@ public class Main {
                     printTasksTypesMenu();
 
                     int taskTypeId = Integer.parseInt(scanner.nextLine().trim()); // Вводится номер типа задачи
+                    System.out.println("Введите наименование:");
+                    String name = scanner.nextLine().trim();
+                    System.out.println("Введите описание задачи");
+                    String description = scanner.nextLine().trim();
+                    int taskDuration = 30;
+                    LocalDateTime startTime = LocalDateTime.now();
+
+                    if (taskTypeId != 2) {
+                        System.out.println("Хотите ввести время начала выполнения задачи? 1 - да, любое другое число - временем начала будет текущий момент");
+                        int startTimeChoice = Integer.parseInt(scanner.nextLine().trim());
+                        if (startTimeChoice == 1) {
+                            startTime = getNewStartTime();
+                        }
+                        System.out.println("Хотите ввести время на выполнение задачи? 1 - Да, любое другое число - Нет");
+                        int durationChoice = Integer.parseInt(scanner.nextLine().trim());
+                        if (durationChoice == 1) {
+                            System.out.println("Введите продолжительность задачи");
+                            taskDuration = Integer.parseInt(scanner.nextLine().trim());
+                        }
+                    }
 
                     switch (taskTypeId) {
                         case 1:
-                            System.out.println("Введите наименование задачи");
-                            String taskName = scanner.nextLine().trim();
-                            System.out.println("Введите описание задачи");
-                            String taskDescription = scanner.nextLine().trim();
-                            Task task = new Task(null, taskName, taskDescription, Status.NEW);
-                            manager.addTask(task);
+                            Task task = new Task(null, name, description, Status.NEW, startTime, taskDuration);
+                            if (manager.checkTime(task)) {
+                                manager.addTask(task);
+                            } else {
+                                System.out.println("Задача пересекается по времени с другими задачами. Попробуйте другое время.");
+                            }
                             break;
                         case 2:
-                            System.out.println("Введите наименование эпика");
-                            String epicName = scanner.nextLine().trim();
-                            System.out.println("Введите описание эпика");
-                            String epicDescription = scanner.nextLine().trim();
-                            Epic epic = new Epic(null, epicName, epicDescription, Status.NEW);
+                            Epic epic = new Epic(null, name, description, Status.NEW, null, null, 0);
                             manager.addEpic(epic);
                             break;
                         case 3:
                             System.out.println("Введите номер эпика подзадачи:");
                             int epicId = Integer.parseInt(scanner.nextLine().trim());
                             if (manager.isEpicExist(epicId)) {
-                                System.out.println("Введите наименование подзадачи");
-                                String subTaskName = scanner.nextLine().trim();
-                                System.out.println("Введите описание подзадачи");
-                                String subTaskDescription = scanner.nextLine().trim();
-                                SubTask subTask = new SubTask(null, subTaskName, subTaskDescription, Status.NEW, epicId);
-                                manager.addSubTask(subTask);
+                                SubTask subTask = new SubTask(null, name, description, Status.NEW, epicId, startTime, taskDuration);
+                                if (manager.checkTime(subTask)) {
+                                    manager.addSubTask(subTask);
+                                } else {
+                                    System.out.println("Задача пересекается по времени с другими задачами. Попробуйте другое время.");
+                                }
                                 break;
                             }
                             break;
@@ -121,6 +144,8 @@ public class Main {
                             String newTaskName = oldTask.getName();
                             String newTaskDescription = oldTask.getDescription();
                             Status newTaskStatus = oldTask.getStatus();
+                            LocalDateTime newTaskStartTime = oldTask.getStartTime();
+                            int newTaskDuration = oldTask.getDuration();
                             System.out.println("Обновить наименование задачи? Да - введите 1, нет - любой другое число");
                             int taskUpdateNameAnswer = Integer.parseInt(scanner.nextLine().trim());
                             if (taskUpdateNameAnswer == 1) {
@@ -139,8 +164,24 @@ public class Main {
                                 System.out.println("Введите новый статус - IN_PROGRESS, DONE");
                                 newTaskStatus = Status.valueOf(scanner.nextLine());
                             }
-                            Task newTask = new Task(newTaskId, newTaskName, newTaskDescription, newTaskStatus);
-                            manager.updateTask(newTask);
+                            System.out.println("Обновить время начала выполнения задачи? Да - введите 1, нет - любой другое число");
+                            int taskUpdateStartTimeAnswer = Integer.parseInt(scanner.nextLine().trim());
+                            if (taskUpdateStartTimeAnswer == 1) {
+                                newTaskStartTime = getNewStartTime();
+                            }
+                            System.out.println("Хотите обновить время на выполнение задачи? 1 - Да, любое другое число - Нет");
+                            int taskUpdateDurationChoice = Integer.parseInt(scanner.nextLine().trim());
+                            if (taskUpdateDurationChoice == 1) {
+                                System.out.println("Введите продолжительность задачи");
+                                newTaskDuration = Integer.parseInt(scanner.nextLine().trim());
+                            }
+
+                            Task newTask = new Task(newTaskId, newTaskName, newTaskDescription, newTaskStatus, newTaskStartTime, newTaskDuration);
+                            if (manager.checkTime(newTask)) {
+                                manager.updateTask(newTask);
+                            } else {
+                                System.out.println("Задача пересекается по времени с другими задачами. Попробуйте другое время.");
+                            }
                             break;
                         case "epic":
                             Epic oldEpic = manager.getEpic(updateTaskId);
@@ -148,6 +189,8 @@ public class Main {
                             String newEpicName = oldEpic.getName();
                             String newEpicDescription = oldEpic.getDescription();
                             Status newEpicStatus = oldEpic.getStatus();
+                            LocalDateTime newEpicStartTime = oldEpic.getStartTime();
+                            int newEpicDuration = oldEpic.getDuration();
                             System.out.println("Обновить наименование эпика? Да - введите 1, нет - любой другое число");
                             int epicUpdateNameAnswer = Integer.parseInt(scanner.nextLine().trim());
                             if (epicUpdateNameAnswer == 1) {
@@ -160,7 +203,7 @@ public class Main {
                                 System.out.println("Введите новое описание эпика:");
                                 newEpicDescription = scanner.nextLine().trim();
                             }
-                            Epic newEpic = new Epic(newEpicId, newEpicName, newEpicDescription, newEpicStatus);
+                            Epic newEpic = new Epic(newEpicId, newEpicName, newEpicDescription, newEpicStatus, null, null, 0);
                             manager.updateEpic(newEpic);
                             break;
                         case "subTask":
@@ -169,6 +212,8 @@ public class Main {
                             String newSubTaskName = oldSubTask.getName();
                             String newSubTaskDescription = oldSubTask.getDescription();
                             Status newSubTaskStatus = oldSubTask.getStatus();
+                            LocalDateTime newSubTaskStartTime = oldSubTask.getStartTime();
+                            int newSubTaskDuration = oldSubTask.getDuration();
                             int newSubtasksEpicId = oldSubTask.getEpicId();
                             System.out.println("Обновить наименование подзадачи? Да - введите 1, нет - любой другое число");
                             int subtaskUpdateNameAnswer = Integer.parseInt(scanner.nextLine().trim());
@@ -188,8 +233,23 @@ public class Main {
                                 System.out.println("Введите новый статус - IN_PROGRESS, DONE");
                                 newSubTaskStatus = Status.valueOf(scanner.nextLine());
                             }
-                            SubTask newSubTask = new SubTask(newSubTaskId, newSubTaskName, newSubTaskDescription, newSubTaskStatus, newSubtasksEpicId);
-                            manager.updateSubTask(newSubTask);
+                            System.out.println("Обновить время начала выполнения задачи? Да - введите 1, нет - любой другое число");
+                            int subTaskUpdateStartTimeAnswer = Integer.parseInt(scanner.nextLine().trim());
+                            if (subTaskUpdateStartTimeAnswer == 1) {
+                                newSubTaskStartTime = getNewStartTime();
+                            }
+                            System.out.println("Хотите обновить время на выполнение задачи? 1 - Да, любое другое число - Нет");
+                            int subTaskUpdateDurationChoice = Integer.parseInt(scanner.nextLine().trim());
+                            if (subTaskUpdateDurationChoice == 1) {
+                                System.out.println("Введите продолжительность задачи");
+                                newSubTaskDuration = Integer.parseInt(scanner.nextLine().trim());
+                            }
+                            SubTask newSubTask = new SubTask(newSubTaskId, newSubTaskName, newSubTaskDescription, newSubTaskStatus, newSubtasksEpicId, newSubTaskStartTime, newSubTaskDuration);
+                            if (manager.checkTime(newSubTask)) {
+                                manager.updateSubTask(newSubTask);
+                            } else {
+                                System.out.println("Задача пересекается по времени с другими задачами. Попробуйте другое время.");
+                            }
                             break;
                         default:
                             return;
@@ -258,4 +318,13 @@ public class Main {
         System.out.println("введите 3 - для создания подзадачи");
         System.out.println("введите 0 - для отмены");
     }
+
+    public static LocalDateTime getNewStartTime() {
+        System.out.println("Введите число в формате dd.MM.yyyy");
+        String newDate = scanner.nextLine().trim();
+        System.out.println("Введите время в формате hh.mm");
+        String newTime = scanner.nextLine().trim();
+        return tc.localDateTimeFromConsole(newDate, newTime);
+    }
+
 }
