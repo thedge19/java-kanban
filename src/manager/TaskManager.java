@@ -76,4 +76,7 @@ public interface TaskManager {
 
     // БЛОК ВРЕМЕНИ
     TreeSet<Task> getPrioritizedTasks();
+
+    // Метод проверки пересечения временных линий
+    boolean checkTime(Task task);
 }

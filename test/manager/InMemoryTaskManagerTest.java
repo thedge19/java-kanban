@@ -53,7 +53,13 @@ public class InMemoryTaskManagerTest extends TaskManagerTest<InMemoryTaskManager
 
     @Override
     @Test
-    public void shouldConflictAddingAndGeneratingIds() {
-        super.shouldConflictAddingAndGeneratingIds();
+    public void epicBoundaryValues() {
+        super.epicBoundaryValues();
+    }
+
+    @Override
+    @Test
+    public void checkingIntersectionsTimelines() {
+        super.checkingIntersectionsTimelines();
     }
 }
