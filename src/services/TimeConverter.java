@@ -19,7 +19,7 @@ public class TimeConverter {
         }
     }
 
-    public LocalDateTime localDateTimeFromConsole (String date, String time) {
+    public LocalDateTime localDateTimeFromConsole(String date, String time) {
         String[] dateArr = date.split("\\.");
         String[] timeArr = time.split("\\.");
 

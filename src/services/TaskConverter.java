@@ -26,7 +26,7 @@ public class TaskConverter {
     public String subTaskToString(SubTask subTask) {
         return subTask.getId() + "," + subTask.getType() + "," + subTask.getName()
                 + "," + subTask.getStatus() + "," + subTask.getDescription()
-                + "," + subTask.getEpicId() + "," + tc.timeToString(subTask.getStartTime()) + "," + subTask.getDuration()  + "\n";
+                + "," + subTask.getEpicId() + "," + tc.timeToString(subTask.getStartTime()) + "," + subTask.getDuration() + "\n";
     }
 
     public Task taskFromArray(String[] arr) {
