@@ -13,10 +13,10 @@ public class Epic extends Task {
 
     private final Map<Integer, LocalDateTime[]> subTaskIds;
 
-    public Epic(Integer id, String name, String description, Status status, Integer EpicId, LocalDateTime startTime, int duration) {
+    public Epic(Integer id, String name, String description, Status status, Integer epicId, LocalDateTime startTime, int duration) {
         super(id, name, description, status, startTime, duration);
         this.subTaskIds = new HashMap<>();
-        this.epicId = null;
+        this.epicId = epicId;
     }
 
     public TaskType getType() {
