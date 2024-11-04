@@ -28,7 +28,6 @@ public class Main {
         File file = new File(filename + ".csv");
 
         FileBackedTaskManager manager = Managers.getDefault(file);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy, HH:mm");
 
         if (file.exists()) {
             manager = FileBackedTaskManager.loadFromFile(file);
@@ -189,8 +188,6 @@ public class Main {
                             String newEpicName = oldEpic.getName();
                             String newEpicDescription = oldEpic.getDescription();
                             Status newEpicStatus = oldEpic.getStatus();
-                            LocalDateTime newEpicStartTime = oldEpic.getStartTime();
-                            int newEpicDuration = oldEpic.getDuration();
                             System.out.println("Обновить наименование эпика? Да - введите 1, нет - любой другое число");
                             int epicUpdateNameAnswer = Integer.parseInt(scanner.nextLine().trim());
                             if (epicUpdateNameAnswer == 1) {

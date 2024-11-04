@@ -73,11 +73,6 @@ public class Task {
         this.epicId = epicId;
     }
 
-    public String toString() {
-        return String.valueOf(getId()) + "," + getType() + "," + getName() + "," + getStatus()
-                + "," + getDescription() + "," + getEpicId();
-    }
-
     public LocalDateTime getEndTime() {
         return startTime.plus(Duration.ofMinutes(duration));
     }
