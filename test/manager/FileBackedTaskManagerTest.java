@@ -27,7 +27,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<InMemoryTaskManag
         try (final FileReader reader = new FileReader(file, UTF_8); final BufferedReader bR = new BufferedReader(reader)) {
             bR.readLine();
             String line = bR.readLine();
-            assertEquals(line, "1,TASK,task,NEW,task,null," + line.split(",")[6] + "," + "30");
+            assertEquals(line, "1,TASK,task,NEW,task," + line.split(",")[5] + "," + "10");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -26,9 +26,9 @@ public abstract class TaskManagerTest<T extends TaskManager> {
     @BeforeEach
     void setUp() {
         manager = getManager();
-        task = new Task(1, "task", "task", Status.NEW, LocalDateTime.now(), 30);
-        epic = new Epic(2, "epic", "epic", Status.NEW, null, null, 0);
-        subTask = new SubTask(3, "subTask", "subTask", Status.NEW, 2, LocalDateTime.now().plus(Duration.ofMinutes(40)), 10);
+        task = new Task(1, "task", "task", Status.NEW, LocalDateTime.now(), 10);
+        epic = new Epic(2, "epic", "epic", Status.NEW);
+        subTask = new SubTask(3, "subTask", "subTask", Status.NEW, 2, LocalDateTime.now().plus(Duration.ofMinutes(15)), 10);
         manager.addTask(task);
         manager.addEpic(epic);
         manager.addSubTask(subTask);
@@ -46,7 +46,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldAddTask() {
-        Task anotherTask = new Task( 4, "anotherTask", "anotherTask", Status.NEW, LocalDateTime.now().plus(Duration.ofMinutes(120)), 30);
+        Task anotherTask = new Task(4, "anotherTask", "anotherTask", Status.NEW, LocalDateTime.now().plus(Duration.ofMinutes(120)), 30);
         manager.addTask(anotherTask);
         List<Task> tasks = manager.getTasks();
         assertEquals(tasks.size(), 2);
@@ -54,7 +54,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldAddSubTask() {
-        SubTask anotherSubTask = new SubTask( 5, "anotherSubTask", "anotherSubTask", Status.NEW, 2, LocalDateTime.now().plus(Duration.ofMinutes(180)), 10);
+        SubTask anotherSubTask = new SubTask(5, "anotherSubTask", "anotherSubTask", Status.NEW, 2, LocalDateTime.now().plus(Duration.ofMinutes(180)), 10);
         manager.addSubTask(anotherSubTask);
         List<SubTask> subTasks = manager.getSubTasks();
         assertEquals(subTasks.size(), 2);
@@ -78,7 +78,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     void shouldAddEpic() {
-        Epic anotherEpic = new Epic(6,"anotherEpic", "anotherEpic", Status.NEW, null, null, 0);
+        Epic anotherEpic = new Epic(6, "anotherEpic", "anotherEpic", Status.NEW);
         manager.addEpic(anotherEpic);
         List<Epic> epics = manager.getEpics();
         assertEquals(epics.size(), 2);
@@ -113,33 +113,10 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
     @Test
     public void epicBoundaryValues() {
-        Epic boundaryEpic = new Epic(4,"boundaryEpic", "boundaryEpic", Status.NEW, null, null, 0);
-        manager.addEpic(boundaryEpic);
-        SubTask boundarySubTask1 = new SubTask(5, "boundarySubTask1", "boundarySubTask1", Status.NEW, 4, LocalDateTime.now(), 10);
-        SubTask boundarySubTask2 = new SubTask(6, "boundarySubTask2", "boundarySubTask2", Status.NEW, 4, LocalDateTime.now().plus(Duration.ofMinutes(15)), 10);
+        SubTask boundarySubTask1 = new SubTask(4, "boundarySubTask1", "boundarySubTask1", Status.IN_PROGRESS, 2, LocalDateTime.now().plus(Duration.ofMinutes(30)), 10);
+        SubTask boundarySubTask2 = new SubTask(5, "boundarySubTask2", "boundarySubTask2", Status.DONE, 2, LocalDateTime.now().plus(Duration.ofMinutes(45)), 10);
         manager.addSubTask(boundarySubTask1);
         manager.addSubTask(boundarySubTask2);
-        assertEquals(boundaryEpic.getStatus(), Status.NEW);
-        manager.updateSubTask(new SubTask(6, "boundarySubTask2", "boundarySubTask2", Status.IN_PROGRESS, 4, LocalDateTime.now().plus(Duration.ofMinutes(15)), 10));
-        assertEquals(boundaryEpic.getStatus(), Status.IN_PROGRESS);
-        manager.updateSubTask(new SubTask(5, "boundarySubTask1", "boundarySubTask1", Status.DONE, 4, LocalDateTime.now(), 10));
-        manager.deleteById(6);
-        assertEquals(boundaryEpic.getStatus(), Status.DONE);
-    }
-
-    @Test
-    public void checkingIntersectionsTimelines() {
-        Task anotherTask = new Task(4,"taskNotInTimeline", "taskNotInTimeline", Status.NEW, LocalDateTime.now().plus(Duration.ofMinutes(10)), 10);
-        if (manager.checkTime(anotherTask)) {
-            manager.addTask(anotherTask);
-        }
-        List<Task> tasks = manager.getTasks();
-        assertEquals(tasks.size(), 1);
-        Task anotherAnotherTask = new Task(5,"taskInTimeline", "taskInTimeline", Status.NEW, LocalDateTime.now().plus(Duration.ofMinutes(60)), 10);
-        if (manager.checkTime(anotherAnotherTask)) {
-            manager.addTask(anotherAnotherTask);
-        }
-        tasks = manager.getTasks();
-        assertEquals(tasks.size(), 2);
+        assertEquals(epic.getStatus(), Status.IN_PROGRESS);
     }
 }

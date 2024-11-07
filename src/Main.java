@@ -99,14 +99,10 @@ public class Main {
                     switch (taskTypeId) {
                         case 1:
                             Task task = new Task(null, name, description, Status.NEW, startTime, taskDuration);
-                            if (manager.checkTime(task)) {
-                                manager.addTask(task);
-                            } else {
-                                System.out.println("Задача пересекается по времени с другими задачами. Попробуйте другое время.");
-                            }
+                            manager.addTask(task);
                             break;
                         case 2:
-                            Epic epic = new Epic(null, name, description, Status.NEW, null, null, 0);
+                            Epic epic = new Epic(null, name, description, Status.NEW);
                             manager.addEpic(epic);
                             break;
                         case 3:
@@ -114,11 +110,7 @@ public class Main {
                             int epicId = Integer.parseInt(scanner.nextLine().trim());
                             if (manager.isEpicExist(epicId)) {
                                 SubTask subTask = new SubTask(null, name, description, Status.NEW, epicId, startTime, taskDuration);
-                                if (manager.checkTime(subTask)) {
-                                    manager.addSubTask(subTask);
-                                } else {
-                                    System.out.println("Задача пересекается по времени с другими задачами. Попробуйте другое время.");
-                                }
+                                manager.addSubTask(subTask);
                                 break;
                             }
                             break;
@@ -143,7 +135,7 @@ public class Main {
                             String newTaskDescription = oldTask.getDescription();
                             Status newTaskStatus = oldTask.getStatus();
                             LocalDateTime newTaskStartTime = oldTask.getStartTime();
-                            int newTaskDuration = oldTask.getDuration();
+                            long newTaskDuration = oldTask.getDuration();
                             System.out.println("Обновить наименование задачи? Да - введите 1, нет - любой другое число");
                             int taskUpdateNameAnswer = Integer.parseInt(scanner.nextLine().trim());
                             if (taskUpdateNameAnswer == 1) {
@@ -175,11 +167,7 @@ public class Main {
                             }
 
                             Task newTask = new Task(newTaskId, newTaskName, newTaskDescription, newTaskStatus, newTaskStartTime, newTaskDuration);
-                            if (manager.checkTime(newTask)) {
-                                manager.updateTask(newTask);
-                            } else {
-                                System.out.println("Задача пересекается по времени с другими задачами. Попробуйте другое время.");
-                            }
+                            manager.updateTask(newTask);
                             break;
                         case "epic":
                             Epic oldEpic = manager.getEpic(updateTaskId);
@@ -199,7 +187,7 @@ public class Main {
                                 System.out.println("Введите новое описание эпика:");
                                 newEpicDescription = scanner.nextLine().trim();
                             }
-                            Epic newEpic = new Epic(newEpicId, newEpicName, newEpicDescription, newEpicStatus, null, null, 0);
+                            Epic newEpic = new Epic(newEpicId, newEpicName, newEpicDescription, newEpicStatus);
                             manager.updateEpic(newEpic);
                             break;
                         case "subTask":
@@ -209,7 +197,7 @@ public class Main {
                             String newSubTaskDescription = oldSubTask.getDescription();
                             Status newSubTaskStatus = oldSubTask.getStatus();
                             LocalDateTime newSubTaskStartTime = oldSubTask.getStartTime();
-                            int newSubTaskDuration = oldSubTask.getDuration();
+                            long newSubTaskDuration = oldSubTask.getDuration();
                             int newSubtasksEpicId = oldSubTask.getEpicId();
                             System.out.println("Обновить наименование подзадачи? Да - введите 1, нет - любой другое число");
                             int subtaskUpdateNameAnswer = Integer.parseInt(scanner.nextLine().trim());
@@ -241,11 +229,7 @@ public class Main {
                                 newSubTaskDuration = Integer.parseInt(scanner.nextLine().trim());
                             }
                             SubTask newSubTask = new SubTask(newSubTaskId, newSubTaskName, newSubTaskDescription, newSubTaskStatus, newSubtasksEpicId, newSubTaskStartTime, newSubTaskDuration);
-                            if (manager.checkTime(newSubTask)) {
-                                manager.updateSubTask(newSubTask);
-                            } else {
-                                System.out.println("Задача пересекается по времени с другими задачами. Попробуйте другое время.");
-                            }
+                            manager.updateSubTask(newSubTask);
                             break;
                         default:
                             return;
@@ -283,6 +267,10 @@ public class Main {
                     manager.getHistory();
                     break;
 
+                case "9":
+                    manager.getPrioritizedTasks();
+                    break;
+
                 case "0":
                     return;
 
@@ -304,6 +292,7 @@ public class Main {
         System.out.println("6 - Удалить все задачи");
         System.out.println("7 - Получить все подзадачи эпика");
         System.out.println("8 - Получить список просмотренных задач");
+        System.out.println("9 - Получить список задач, отсортированных по времени");
         System.out.println("0 - Выход");
     }
 

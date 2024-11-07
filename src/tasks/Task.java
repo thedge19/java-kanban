@@ -13,20 +13,25 @@ public class Task {
     private String description;
     private Status status;
     private final TaskType type = TaskType.TASK;
-    protected Integer epicId;
     // время
     private LocalDateTime startTime;
-    private int duration;
+    private long duration;
 
 
-    public Task(Integer id, String name, String description, Status status, LocalDateTime startTime, int duration) {
+    public Task(Integer id, String name, String description, Status status, LocalDateTime startTime, long duration) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.status = status;
-        this.epicId = null;
         this.startTime = startTime;
         this.duration = duration;
+    }
+
+    public Task(Integer id, String name, String description, Status status) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = status;
     }
 
     public int getId() {
@@ -65,23 +70,12 @@ public class Task {
         return type;
     }
 
-    public Integer getEpicId() {
-        return null;
-    }
-
-    public void setEpicId(int epicId) {
-        this.epicId = epicId;
-    }
-
-    public LocalDateTime getEndTime() {
-        return startTime.plus(Duration.ofMinutes(duration));
-    }
 
     public LocalDateTime getStartTime() {
         return startTime;
     }
 
-    public Integer getDuration() {
+    public long getDuration() {
         return duration;
     }
 
@@ -89,7 +83,11 @@ public class Task {
         this.startTime = startTime;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(Duration.ofMinutes(duration));
     }
 }

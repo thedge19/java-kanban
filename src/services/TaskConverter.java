@@ -14,13 +14,12 @@ public class TaskConverter {
     public String taskToString(Task task) {
         return task.getId() + "," + task.getType() + "," + task.getName()
                 + "," + task.getStatus() + "," + task.getDescription()
-                + "," + task.getEpicId() + "," + tc.timeToString(task.getStartTime()) + "," + task.getDuration() + "\n";
+                + "," + tc.timeToString(task.getStartTime()) + "," + task.getDuration() + "\n";
     }
 
     public String epicToString(Epic epic) {
         return epic.getId() + "," + epic.getType() + "," + epic.getName()
-                + "," + epic.getStatus() + "," + epic.getDescription()
-                + "," + epic.getEpicId() + "," + tc.timeToString(epic.getStartTime()) + "," + epic.getDuration() + "\n";
+                + "," + epic.getStatus() + "," + epic.getDescription() + "\n";
     }
 
     public String subTaskToString(SubTask subTask) {
@@ -31,12 +30,12 @@ public class TaskConverter {
 
     public Task taskFromArray(String[] arr) {
         return new Task(Integer.parseInt(arr[0]), arr[2], arr[4],
-                Status.valueOf(arr[3]), LocalDateTime.parse(arr[6]), Integer.parseInt(arr[7]));
+                Status.valueOf(arr[3]), LocalDateTime.parse(arr[5]), Integer.parseInt(arr[6]));
     }
 
     public Epic epicFromArray(String[] arr) {
         return new Epic(Integer.parseInt(arr[0]), arr[2], arr[4],
-                Status.valueOf(arr[3]), null, tc.epicLocalDateTime(arr[6]), Integer.parseInt(arr[7]));
+                Status.valueOf(arr[3]));
     }
 
     public SubTask subTaskFromArray(String[] arr) {

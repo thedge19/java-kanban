@@ -4,31 +4,29 @@ import enums.Status;
 import enums.TaskType;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task {
 
     private final TaskType type = TaskType.EPIC;
+    private final List<Integer> subTaskIds;
 
-    private final Map<Integer, LocalDateTime[]> subTaskIds;
-
-    public Epic(Integer id, String name, String description, Status status, Integer epicId, LocalDateTime startTime, int duration) {
-        super(id, name, description, status, startTime, duration);
-        this.subTaskIds = new HashMap<>();
-        this.epicId = epicId;
+    public Epic(Integer id, String name, String description, Status status) {
+        super(id, name, description, status);
+        this.subTaskIds = new ArrayList<>();
     }
 
     public TaskType getType() {
         return type;
     }
 
-    public Map<Integer, LocalDateTime[]> getSubTaskIds() {
+    public List<Integer> getSubTaskIds() {
         return subTaskIds;
     }
 
-    public void addSubTaskId(int id, LocalDateTime[] times) {
-        subTaskIds.put(id, times);
+    public void addSubTaskId(int id) {
+        subTaskIds.add(id);
     }
 
     public void deleteSubTaskId(int id) {

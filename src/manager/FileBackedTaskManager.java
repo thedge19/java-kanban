@@ -128,15 +128,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 if (Objects.equals(taskValues[1], "TASK")) {
                     Task loadedTask = taskConverter.taskFromArray(taskValues);
                     if (checkTime(loadedTask)) {
-                        tasks.put(id, loadedTask);
+                        addTask(loadedTask);
                     }
                 } else if (Objects.equals(taskValues[1], "EPIC")) {
                     Epic loadedEpic = taskConverter.epicFromArray(taskValues);
-                    epics.put(id, loadedEpic);
+                    addEpic(loadedEpic);
                 } else if (Objects.equals(taskValues[1], "SUBTASK")) {
                     SubTask loadedSubTask = taskConverter.subTaskFromArray(taskValues);
                     if (checkTime(loadedSubTask)) {
-                        calculateEpic(loadedSubTask.getId());
+                        calculateEpicStartTimeAndDuration(loadedSubTask);
                         addSubTask(loadedSubTask);
                     }
                 }

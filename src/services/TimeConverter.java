@@ -1,6 +1,7 @@
 package services;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class TimeConverter {
 
@@ -9,14 +10,6 @@ public class TimeConverter {
             return "null";
         }
         return time.toString();
-    }
-
-    public LocalDateTime epicLocalDateTime(String time) {
-        if (time.equals("null")) {
-            return null;
-        } else {
-            return LocalDateTime.parse(time);
-        }
     }
 
     public LocalDateTime localDateTimeFromConsole(String date, String time) {
