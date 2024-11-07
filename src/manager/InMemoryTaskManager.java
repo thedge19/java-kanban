@@ -19,7 +19,6 @@ public class InMemoryTaskManager implements TaskManager {
     protected final Map<Integer, SubTask> subTasks;
     protected final Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
     protected int counter = 0;
-    TimeConverter timeConverter = new TimeConverter();
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
