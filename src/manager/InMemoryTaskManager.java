@@ -1,6 +1,7 @@
 package manager;
 
 import enums.Status;
+import enums.TaskType;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
@@ -16,7 +17,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected final Map<Integer, Task> tasks;
     protected final Map<Integer, Epic> epics;
     protected final Map<Integer, SubTask> subTasks;
-    protected final Set<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime));
+    protected final Set<Task> prioritizedTasks = new TreeSet<>(Comparator.nullsLast(Comparator.comparing(Task::getStartTime)));
     protected int counter = 0;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
@@ -43,10 +44,6 @@ public class InMemoryTaskManager implements TaskManager {
     // метод получения списка эпиков
     @Override
     public List<Epic> getEpics() {
-        List<Epic> newEpics = new ArrayList<>(epics.values());
-        for (Epic epic : newEpics) {
-            System.out.println(epic.getSubTaskIds());
-        }
         return new ArrayList<>(epics.values());
     }
 
@@ -147,6 +144,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateTask(Task task) {
         if (isTaskExist(task.getId()) && checkTime(task)) {
             tasks.put(task.getId(), task);
+            prioritizedTasks.add(task);
         }
     }
 
@@ -170,6 +168,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (isSubTaskExist(subTask.getId()) && checkTime(subTask)) {
             int updateEpicId = subTask.getEpicId();
             subTasks.put(subTask.getId(), subTask);
+            prioritizedTasks.add(subTask);
             updateEpicStatus(updateEpicId);
         }
     }
@@ -221,6 +220,7 @@ public class InMemoryTaskManager implements TaskManager {
     // метод удаления типа по идентификатору
     private void deleteTaskById(int deleteTaskId) {
         removeTaskFromHistory(deleteTaskId);
+        prioritizedTasks.remove(tasks.get(deleteTaskId));
         tasks.remove(deleteTaskId);
     }
 
@@ -228,21 +228,22 @@ public class InMemoryTaskManager implements TaskManager {
     private void deleteEpicById(int deleteEpicId) {
         removeTaskFromHistory(deleteEpicId);
         Epic epic = epics.get(deleteEpicId);
-        for (SubTask subTask : getSubTasks()) {
+        for (int subTaskId : epic.getSubTaskIds()) {
             // удаление всех подзадач эпика
-            if (epic.getId() == subTask.getEpicId()) {
-                removeTaskFromHistory(subTask.getId());
-                subTasks.remove(subTask.getId());
-            }
+            removeTaskFromHistory(subTaskId);
+            prioritizedTasks.remove(subTasks.get(subTaskId));
+            subTasks.remove(subTaskId);
         }
         epics.remove(deleteEpicId);
     }
+
 
     // метод удаления подзадачи по идентификатору
     private void deleteSubTaskById(int deletedSubTaskId) {
         SubTask subTask = subTasks.get(deletedSubTaskId);
         removeTaskFromHistory(deletedSubTaskId);
         subTasks.remove(deletedSubTaskId);
+        prioritizedTasks.remove(subTasks.get(deletedSubTaskId));
         Epic epic = epics.get(subTask.getEpicId());
         epic.deleteSubTaskId(deletedSubTaskId);
         updateEpicStatus(subTask.getEpicId()); // пересчёт статуса эпика
@@ -253,6 +254,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteAllTasks() {
         for (int deletedTaskId : tasks.keySet()) {
             historyManager.remove(deletedTaskId);
+            prioritizedTasks.remove(tasks.get(deletedTaskId));
         }
         tasks.clear();
     }
@@ -261,15 +263,18 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteAllEpics() {
         for (int deletedEpicId : epics.keySet()) {
             historyManager.remove(deletedEpicId);
+            prioritizedTasks.remove(tasks.get(deletedEpicId));
         }
         epics.clear();
         clearAllSubTasksFromHistory();
+        prioritizedTasks.removeIf(task -> task.getType() == TaskType.SUBTASK);
         subTasks.clear(); // при удалении всех эпиков, подазадачи также перестают существовать
     }
 
     @Override
     public void deleteAllSubTasks() {
         clearAllSubTasksFromHistory();
+        prioritizedTasks.removeIf(task -> task.getType() == TaskType.SUBTASK);
         subTasks.clear();
     }
 
