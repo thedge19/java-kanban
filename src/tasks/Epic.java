@@ -4,20 +4,15 @@ import enums.Status;
 import enums.TaskType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Epic extends Task {
 
     private final TaskType type = TaskType.EPIC;
-
-    private final ArrayList<Integer> subTaskIds;
+    private final List<Integer> subTaskIds;
 
     public Epic(Integer id, String name, String description, Status status) {
         super(id, name, description, status);
-        this.subTaskIds = new ArrayList<>();
-    }
-
-    public Epic(String name, String description, Status status) {
-        super(name, description, status);
         this.subTaskIds = new ArrayList<>();
     }
 
@@ -25,7 +20,7 @@ public class Epic extends Task {
         return type;
     }
 
-    public ArrayList<Integer> getSubTaskIds() {
+    public List<Integer> getSubTaskIds() {
         return subTaskIds;
     }
 

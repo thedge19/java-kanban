@@ -72,4 +72,7 @@ public interface TaskManager {
 
     // БЛОК ПОЛУЧЕНИЯ ИСТОРИИ ПРОСМОТРОВ
     List<Task> getHistory();
+
+    // БЛОК ВРЕМЕНИ
+    List<Task> getPrioritizedTasks();
 }

@@ -35,7 +35,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     private void save() {
         try (final BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.append("id,type,name,status,description,epic\n");
+            writer.append("id,type,name,status,description,epic,startTime,duration\n");
             for (Task task : tasks.values()) {
                 writer.append(taskConverter.taskToString(task));
             }
@@ -127,15 +127,18 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
                 if (Objects.equals(taskValues[1], "TASK")) {
                     Task loadedTask = taskConverter.taskFromArray(taskValues);
-                    tasks.put(id, loadedTask);
+                    if (checkTime(loadedTask)) {
+                        addTask(loadedTask);
+                    }
                 } else if (Objects.equals(taskValues[1], "EPIC")) {
                     Epic loadedEpic = taskConverter.epicFromArray(taskValues);
-                    epics.put(id, loadedEpic);
+                    addEpic(loadedEpic);
                 } else if (Objects.equals(taskValues[1], "SUBTASK")) {
                     SubTask loadedSubTask = taskConverter.subTaskFromArray(taskValues);
-                    Epic epic = getEpic(loadedSubTask.getEpicId());
-                    epic.addSubTaskId(loadedSubTask.getId());
-                    subTasks.put(id, loadedSubTask);
+                    if (checkTime(loadedSubTask)) {
+                        calculateEpicStartTimeAndDuration(loadedSubTask);
+                        addSubTask(loadedSubTask);
+                    }
                 }
                 if (maxId < id) {
                     maxId = id;

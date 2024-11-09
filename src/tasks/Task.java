@@ -3,6 +3,9 @@ package tasks;
 import enums.Status;
 import enums.TaskType;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Task {
 
     private Integer id;
@@ -10,24 +13,22 @@ public class Task {
     private String description;
     private Status status;
     private final TaskType type = TaskType.TASK;
-    private Integer epicId;
+    // время
+    private LocalDateTime startTime;
+    private long duration;
+
+
+    public Task(Integer id, String name, String description, Status status, LocalDateTime startTime, long duration) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.startTime = startTime;
+        this.duration = duration;
+    }
 
     public Task(Integer id, String name, String description, Status status) {
         this.id = id;
-        this.name = name;
-        this.description = description;
-        this.status = status;
-    }
-
-    public Task(Integer id, String name, String description, Status status, Integer epicId) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.status = status;
-        this.epicId = epicId;
-    }
-
-    public Task(String name, String description, Status status) {
         this.name = name;
         this.description = description;
         this.status = status;
@@ -69,16 +70,24 @@ public class Task {
         return type;
     }
 
-    public Integer getEpicId() {
-        return null;
+
+    public LocalDateTime getStartTime() {
+        return startTime;
     }
 
-    public void setEpicId(int epicId) {
-        this.epicId = epicId;
+    public long getDuration() {
+        return duration;
     }
 
-    public String toString() {
-        return String.valueOf(getId()) + "," + getType() + "," + getName() + "," + getStatus()
-                + "," + getDescription() + "," + getEpicId();
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(Duration.ofMinutes(duration));
     }
 }
