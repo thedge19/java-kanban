@@ -6,8 +6,6 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
-import javax.swing.text.DateFormatter;
-import java.text.DateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -23,7 +21,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected final Set<Task> prioritizedTasks = new TreeSet<>(Comparator.nullsLast(Comparator.comparing(Task::getStartTime)));
     protected int counter = 0;
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
