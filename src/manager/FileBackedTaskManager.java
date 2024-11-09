@@ -121,7 +121,6 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 if (line == null) {
                     return;
                 }
-
                 String[] taskValues = line.split(",");
                 final int id = Integer.parseInt(taskValues[0]);
 

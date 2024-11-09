@@ -6,8 +6,11 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 
+import javax.swing.text.DateFormatter;
+import java.text.DateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -19,6 +22,8 @@ public class InMemoryTaskManager implements TaskManager {
     protected final Map<Integer, SubTask> subTasks;
     protected final Set<Task> prioritizedTasks = new TreeSet<>(Comparator.nullsLast(Comparator.comparing(Task::getStartTime)));
     protected int counter = 0;
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
@@ -87,6 +92,8 @@ public class InMemoryTaskManager implements TaskManager {
             task.setId(counter);
             prioritizedTasks.add(task);
             tasks.put(counter, task);
+        } else {
+            System.out.println("Задача не создана");
         }
     }
 
@@ -300,6 +307,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getPrioritizedTasks() {
+        prioritizedTasks.forEach(task -> System.out.println(task.getName() + " " + task.getStartTime().format(formatter) + " " + task.getEndTime().format(formatter)));
         return new ArrayList<>(prioritizedTasks);
     }
 
@@ -338,11 +346,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (!prioritizedTasks.isEmpty()) {
             LocalDateTime startTime = task.getStartTime();
             LocalDateTime endTime = startTime.plus(Duration.ofMinutes(task.getDuration()));
-            for (Task t : prioritizedTasks) {
-                if (isBetween(startTime, endTime, t.getStartTime(), t.getEndTime())) {
-                    check = false;
-                }
-            }
+            check = prioritizedTasks.stream().noneMatch(t -> isBetween(startTime, endTime, t.getStartTime(), t.getEndTime()));
         }
         return check;
     }
