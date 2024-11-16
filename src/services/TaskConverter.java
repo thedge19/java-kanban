@@ -43,11 +43,4 @@ public class TaskConverter {
         return new SubTask(Integer.parseInt(arr[0]), arr[2], arr[4],
                 Status.valueOf(arr[3]), Integer.parseInt(arr[5]), LocalDateTime.parse(arr[6]), Integer.parseInt(arr[7]));
     }
-
-    private static LocalDateTime parseTime(String time) {
-        if (time.equals("null")) {
-            return null;
-        }
-        return LocalDateTime.parse(time);
-    }
 }
