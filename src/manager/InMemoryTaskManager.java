@@ -170,20 +170,24 @@ public class InMemoryTaskManager implements TaskManager {
 
     // метод изменения задачи
     @Override
-    public void updateTask(Task task) {
+    public int updateTask(Task task) {
         if (isTaskExist(task.getId()) && checkTime(task)) {
             tasks.put(task.getId(), task);
             prioritizedTasks.add(task);
+            return task.getId();
         }
+        return -1;
     }
 
     // Метод изменения эпика
     @Override
-    public void updateEpic(Epic epic) {
+    public int updateEpic(Epic epic) {
         if (isEpicExist(epic.getId())) {
             updateEpicStatus(epic.getId());
             epics.put(epic.getId(), epic);
+            return epic.getId();
         }
+        return -1;
     }
 
     // метод проверки наличия подзадачи
@@ -193,13 +197,15 @@ public class InMemoryTaskManager implements TaskManager {
 
     // метод изменения подзадачи
     @Override
-    public void updateSubTask(SubTask subTask) {
+    public int updateSubTask(SubTask subTask) {
         if (isSubTaskExist(subTask.getId()) && checkTime(subTask)) {
             int updateEpicId = subTask.getEpicId();
             subTasks.put(subTask.getId(), subTask);
             prioritizedTasks.add(subTask);
             updateEpicStatus(updateEpicId);
+            return subTask.getId();
         }
+        return -1;
     }
 
     // метод обновления статуса эпика после обновления статуса подзадачи

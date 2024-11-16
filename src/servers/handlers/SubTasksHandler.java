@@ -47,16 +47,19 @@ public class SubTasksHandler implements HttpHandler {
                 try {
                     String bodyRequest = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
 
+                    int responseOfAddition;
                     SubTask subTask = GsonConverter.getDefaultGson().fromJson(bodyRequest, SubTask.class);
-                    if (subTask.getStartTime() == null) {
+
+                    if (subTask.getId() == null) {
                         subTask.setStartTime(LocalDateTime.now());
-                    }
-
-                    if (subTask.getDuration() == 0) {
                         subTask.setDuration(10);
+                        responseOfAddition = taskManager.addSubTask(subTask);
+                    } else {
+                        SubTask oldSubTask = taskManager.getSubTask(subTask.getId());
+                        subTask.setStartTime(oldSubTask.getStartTime());
+                        subTask.setDuration(oldSubTask.getDuration());
+                        responseOfAddition = taskManager.updateSubTask(subTask);
                     }
-
-                    int responseOfAddition = taskManager.addSubTask(subTask);
 
                     if (responseOfAddition == -1) {
                         statusCode = 406;

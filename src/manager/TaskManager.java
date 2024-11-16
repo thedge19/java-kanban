@@ -48,13 +48,13 @@ public interface TaskManager {
     String checkTypeById(int taskId);
 
     // метод изменения задачи
-    void updateTask(Task task);
+    int updateTask(Task task);
 
     // Метод изменения эпика
-    void updateEpic(Epic epic);
+    int updateEpic(Epic epic);
 
     // метод изменения подзадачи
-    void updateSubTask(SubTask subTask);
+    int updateSubTask(SubTask subTask);
 
     // БЛОК УДАЛЕНИЯ ПО ИДЕНТИФИКАТОРУ
     // метод выбора задачи по типу

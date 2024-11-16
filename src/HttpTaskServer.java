@@ -48,13 +48,9 @@ public class HttpTaskServer {
             } else {
                 System.out.println("Некорректная команда");
             }
-
-
-
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
-
     }
 }
 

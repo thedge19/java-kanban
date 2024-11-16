@@ -55,7 +55,12 @@ public class TasksHandler implements HttpHandler {
                         task.setDuration(10);
                     }
 
-                    int responseOfAddition = taskManager.addTask(task);
+                    int responseOfAddition;
+                    if (task.getId() == null) {
+                        responseOfAddition = taskManager.addTask(task);
+                    } else {
+                        responseOfAddition = taskManager.updateTask(task);
+                    }
 
                     if (responseOfAddition == -1) {
                         statusCode = 406;
