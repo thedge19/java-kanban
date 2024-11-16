@@ -84,14 +84,21 @@ public class InMemoryTaskManager implements TaskManager {
     // БЛОК ДОБАВЛЕНИЯ ЗАДАЧ
     // метод добавления задачи
     @Override
-    public void addTask(Task task) {
+    public int addTask(Task task) {
         if (checkTime(task)) {
+            int taskId;
             counter += 1;
-            task.setId(counter);
+            if (task.getId() != null) {
+                taskId = task.getId();
+            } else {
+                taskId = counter;
+                task.setId(taskId);
+            }
             prioritizedTasks.add(task);
-            tasks.put(counter, task);
+            tasks.put(taskId, task);
+            return taskId;
         } else {
-            System.out.println("Задача не создана");
+            return -1;
         }
     }
 
@@ -103,24 +110,41 @@ public class InMemoryTaskManager implements TaskManager {
 
     // метод добавления эпика
     @Override
-    public void addEpic(Epic epic) {
+    public int addEpic(Epic epic) {
+        int epicId;
         counter += 1;
-        epic.setId(counter);
-        epics.put(counter, epic);
+        if (epic.getId() != null) {
+            epicId = epic.getId();
+        } else {
+            epicId = counter;
+            epic.setId(epicId);
+        }
+        epic.setId(epicId);
+        epics.put(epicId, epic);
+        return epicId;
     }
 
     // метод добавления подзадачи
     @Override
-    public void addSubTask(SubTask subTask) {
+    public int addSubTask(SubTask subTask) {
+        int subTaskId;
         if (checkTime(subTask) && isEpicExist(subTask.getEpicId())) {
             counter += 1;
+            if (subTask.getId() != null) {
+                subTaskId = subTask.getId();
+            } else {
+                subTaskId = counter;
+            }
             Epic epic = epics.get(subTask.getEpicId());
-            subTask.setId(counter);
+            subTask.setId(subTaskId);
             prioritizedTasks.add(subTask);
             updateEpicStatus(epic.getId());
-            subTasks.put(counter, subTask);
-            epic.addSubTaskId(counter);
+            subTasks.put(subTaskId, subTask);
+            epic.addSubTaskId(subTaskId);
             calculateEpicStartTimeAndDuration(subTask);
+            return subTaskId;
+        } else {
+            return -1;
         }
     }
 
@@ -212,14 +236,19 @@ public class InMemoryTaskManager implements TaskManager {
     // БЛОК УДАЛЕНИЯ ПО ИДЕНТИФИКАТОРУ
     // метод выбора задачи по типу
     @Override
-    public void deleteById(int deleteId) {
+    public int deleteById(int deleteId) {
+        int checkAnswer = -1;
         if (tasks.get(deleteId) != null) {
             deleteTaskById(deleteId);
+            return deleteId;
         } else if (epics.get(deleteId) != null) {
             deleteEpicById(deleteId);
+            return deleteId;
         } else if (subTasks.get(deleteId) != null) {
             deleteSubTaskById(deleteId);
+            return deleteId;
         }
+        return checkAnswer;
     }
 
     // метод удаления типа по идентификатору

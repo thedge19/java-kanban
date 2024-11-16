@@ -36,13 +36,13 @@ public interface TaskManager {
     boolean isEpicExist(int epicId);
 
     // метод добавления задачи
-    void addTask(Task task);
+    int addTask(Task task);
 
     // метод добавления эпика
-    void addEpic(Epic epic);
+    int addEpic(Epic epic);
 
     // метод добавления подзадачи
-    void addSubTask(SubTask subTask);
+    int addSubTask(SubTask subTask);
 
     // Возвращение в main типа задачи
     String checkTypeById(int taskId);
@@ -58,7 +58,7 @@ public interface TaskManager {
 
     // БЛОК УДАЛЕНИЯ ПО ИДЕНТИФИКАТОРУ
     // метод выбора задачи по типу
-    void deleteById(int deleteId);
+    int deleteById(int deleteId);
 
     // БЛОК УДАЛЕНИЯ ВСЕХ ЗАДАЧ
     void deleteAllTasks();
