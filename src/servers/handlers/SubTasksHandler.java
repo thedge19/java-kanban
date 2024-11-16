@@ -1,21 +1,22 @@
-package servers;
+package servers.handlers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import enums.TaskType;
 import manager.TaskManager;
 import services.GsonConverter;
-import tasks.Epic;
+import tasks.SubTask;
+import tasks.Task;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 
-public class EpicsHandler implements HttpHandler {
+public class SubTasksHandler implements HttpHandler {
 
     private final TaskManager taskManager;
 
-    public EpicsHandler(TaskManager taskManager) {
+    public SubTasksHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
     }
 
@@ -24,19 +25,18 @@ public class EpicsHandler implements HttpHandler {
 
         String requestMethod = exchange.getRequestMethod();
         String requestQuery = exchange.getRequestURI().getQuery();
-
         String response;
         int statusCode = 200;
 
         switch (requestMethod) {
             case "GET":
                 if (requestQuery == null) {
-                    response = GsonConverter.getDefaultGson().toJson(taskManager.getEpics());
+                    response = GsonConverter.getDefaultGson().toJson(taskManager.getSubTasks());
                 } else {
                     int id = Integer.parseInt(requestQuery.split("=")[1]);
-                    Epic epic = taskManager.getEpic(id);
-                    if (epic != null) {
-                        response = GsonConverter.getDefaultGson().toJson(epic);
+                    SubTask subTask = taskManager.getSubTask(id);
+                    if (subTask != null) {
+                        response = GsonConverter.getDefaultGson().toJson(subTask);
                     } else {
                         statusCode = 404;
                         response = "Задача не найдена";
@@ -47,12 +47,16 @@ public class EpicsHandler implements HttpHandler {
                 try {
                     String bodyRequest = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
 
-                    Epic epic = GsonConverter.getDefaultGson().fromJson(bodyRequest, Epic.class);
-                    System.out.println(epic.getType());
+                    SubTask subTask = GsonConverter.getDefaultGson().fromJson(bodyRequest, SubTask.class);
+                    if (subTask.getStartTime() == null) {
+                        subTask.setStartTime(LocalDateTime.now());
+                    }
 
-                    int responseOfAddition = taskManager.addEpic(epic);
+                    if (subTask.getDuration() == 0) {
+                        subTask.setDuration(10);
+                    }
 
-                    System.out.println((responseOfAddition));
+                    int responseOfAddition = taskManager.addSubTask(subTask);
 
                     if (responseOfAddition == -1) {
                         statusCode = 406;
@@ -68,7 +72,7 @@ public class EpicsHandler implements HttpHandler {
                 break;
             case "DELETE":
                 if (requestQuery == null) {
-                    taskManager.deleteAllEpics();
+                    taskManager.deleteAllSubTasks();
                     response = "Все задачи удалены";
                 } else {
                     int id = Integer.parseInt(requestQuery.split("=")[1]);

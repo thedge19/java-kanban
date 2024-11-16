@@ -1,1 +1,8 @@
 id,type,name,status,description,epic,startTime,duration
+1,TASK,newTask,NEW,newTask,2024-11-16T22:37:13.084775300,10
+7,TASK,newTask,NEW,newTask,2024-11-16T23:50:13.084775300,10
+2,EPIC,newTask,NEW,newTask
+5,EPIC,newTask,NEW,newTask
+3,SUBTASK,newTask,NEW,newTask,2,2024-11-16T22:57:46.562035800,10
+4,SUBTASK,newTask,NEW,newTask,2,2024-11-16T23:17:46.562035800,10
+6,SUBTASK,newTask,NEW,newTask,5,2024-11-16T23:30:46.562035800,10

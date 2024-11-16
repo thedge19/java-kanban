@@ -334,7 +334,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getPrioritizedTasks() {
-        prioritizedTasks.forEach(task -> System.out.println(task.getName() + " " + task.getStartTime().format(formatter) + " " + task.getEndTime().format(formatter)));
         return new ArrayList<>(prioritizedTasks);
     }
 

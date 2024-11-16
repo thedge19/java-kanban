@@ -1,10 +1,7 @@
-package servers;
-
-import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpServer;
 import manager.FileBackedTaskManager;
-import manager.Managers;
 import manager.TaskManager;
+import servers.handlers.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +14,6 @@ import java.util.Scanner;
 public class HttpTaskServer {
     private static final int PORT = 8080;
     static Scanner scanner = new Scanner(System.in);
-    private HttpServer httpServer;
     static File file;
     static TaskManager taskManager = new FileBackedTaskManager(file);
 
@@ -41,11 +37,24 @@ public class HttpTaskServer {
             httpServer.createContext("/tasks/", new TasksHandler(taskManager));
             httpServer.createContext("/epics/", new EpicsHandler(taskManager));
             httpServer.createContext("/subTasks/", new SubTasksHandler(taskManager));
+            httpServer.createContext("/prioritizedTasks/", new PrioritizedTasksHandler(taskManager));
+            httpServer.createContext("/history/", new HistoryHandler(taskManager));
 
             System.out.println("HTTP-сервер запущен на " + PORT + " порту!");
+            System.out.println("Для остановки сервера введите exit");
+            String exit = scanner.nextLine();
+            if (exit.equals("exit")) {
+                httpServer.stop(1);
+            } else {
+                System.out.println("Некорректная команда");
+            }
+
+
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
+
     }
 }
 

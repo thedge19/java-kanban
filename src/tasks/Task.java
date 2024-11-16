@@ -12,7 +12,7 @@ public class Task {
     private String name;
     private String description;
     private Status status;
-    private TaskType type;
+    private transient TaskType type;
     // время
     private LocalDateTime startTime;
     private long duration;
@@ -25,7 +25,7 @@ public class Task {
         this.status = status;
         this.startTime = startTime;
         this.duration = duration;
-        setType(TaskType.TASK);
+        this.type = TaskType.TASK;
     }
 
     public Task(Integer id, String name, String description, Status status) {
@@ -33,7 +33,7 @@ public class Task {
         this.name = name;
         this.description = description;
         this.status = status;
-        setType(TaskType.TASK);
+        this.type = TaskType.TASK;
     }
 
     public Integer getId() {
