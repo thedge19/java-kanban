@@ -1,5 +1,4 @@
 import manager.FileBackedTaskManager;
-import manager.Managers;
 import manager.TaskManager;
 import servers.HttpTaskServer;
 
@@ -16,17 +15,15 @@ public class Main {
     static TaskManager taskManager = new FileBackedTaskManager(file);
 
     public static void main(String[] args) throws IOException {
-        //        System.out.println("Введите имя файла:");
-//        String filename = scanner.nextLine();
+                System.out.println("Введите имя файла:");
+        String filename = scanner.nextLine();
 
-//        File file = new File(filename + ".csv");
-        File file = new File("test.csv");
+        File file = new File(filename + ".csv");
 
         if (file.exists()) {
             taskManager = FileBackedTaskManager.loadFromFile(file);
         } else {
-//            Files.createFile(Paths.get(filename + ".csv"));
-            Files.createFile(Paths.get("test.csv"));
+            Files.createFile(Paths.get(filename + ".csv"));
         }
 
         HttpTaskServer taskServer = new HttpTaskServer(taskManager);
