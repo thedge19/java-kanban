@@ -1,4 +1,4 @@
-package servers.handlers;
+package servers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -8,10 +8,10 @@ import services.GsonConverter;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class PrioritizedTasksHandler implements HttpHandler {
+public class HistoryHandler implements HttpHandler {
     private final TaskManager taskManager;
 
-    public PrioritizedTasksHandler(TaskManager taskManager) {
+    public HistoryHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
     }
 
@@ -22,7 +22,7 @@ public class PrioritizedTasksHandler implements HttpHandler {
         int statusCode = 200;
 
         if (requestMethod.equals("GET")) {
-            response = GsonConverter.getDefaultGson().toJson(taskManager.getPrioritizedTasks());
+            response = GsonConverter.getDefaultGson().toJson(taskManager.getHistory());
         } else {
             statusCode = 400;
             response = "Некорректный запрос";

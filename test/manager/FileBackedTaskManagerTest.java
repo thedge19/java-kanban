@@ -14,6 +14,7 @@ public class FileBackedTaskManagerTest extends TaskManagerTest<InMemoryTaskManag
 
     File file = File.createTempFile("data", null);
 
+
     @Override
     protected InMemoryTaskManager getManager() {
         return new FileBackedTaskManager(new InMemoryHistoryManager(), file);

@@ -1,21 +1,21 @@
-package servers.handlers;
+package servers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import manager.TaskManager;
 import services.GsonConverter;
-import tasks.Task;
+import tasks.SubTask;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 
-public class TasksHandler implements HttpHandler {
+public class SubTasksHandler implements HttpHandler {
 
     private final TaskManager taskManager;
 
-    public TasksHandler(TaskManager taskManager) {
+    public SubTasksHandler(TaskManager taskManager) {
         this.taskManager = taskManager;
     }
 
@@ -30,12 +30,12 @@ public class TasksHandler implements HttpHandler {
         switch (requestMethod) {
             case "GET":
                 if (requestQuery == null) {
-                    response = GsonConverter.getDefaultGson().toJson(taskManager.getTasks());
+                    response = GsonConverter.getDefaultGson().toJson(taskManager.getSubTasks());
                 } else {
                     int id = Integer.parseInt(requestQuery.split("=")[1]);
-                    Task task = taskManager.getTask(id);
-                    if (task != null) {
-                        response = GsonConverter.getDefaultGson().toJson(task);
+                    SubTask subTask = taskManager.getSubTask(id);
+                    if (subTask != null) {
+                        response = GsonConverter.getDefaultGson().toJson(subTask);
                     } else {
                         statusCode = 404;
                         response = "Задача не найдена";
@@ -46,20 +46,18 @@ public class TasksHandler implements HttpHandler {
                 try {
                     String bodyRequest = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
 
-                    Task task = GsonConverter.getDefaultGson().fromJson(bodyRequest, Task.class);
-                    if (task.getStartTime() == null) {
-                        task.setStartTime(LocalDateTime.now());
-                    }
-
-                    if (task.getDuration() == 0) {
-                        task.setDuration(10);
-                    }
-
                     int responseOfAddition;
-                    if (task.getId() == null) {
-                        responseOfAddition = taskManager.addTask(task);
+                    SubTask subTask = GsonConverter.getDefaultGson().fromJson(bodyRequest, SubTask.class);
+
+                    if (subTask.getId() == null) {
+                        subTask.setStartTime(LocalDateTime.now());
+                        subTask.setDuration(10);
+                        responseOfAddition = taskManager.addSubTask(subTask);
                     } else {
-                        responseOfAddition = taskManager.updateTask(task);
+                        SubTask oldSubTask = taskManager.getSubTask(subTask.getId());
+                        subTask.setStartTime(oldSubTask.getStartTime());
+                        subTask.setDuration(oldSubTask.getDuration());
+                        responseOfAddition = taskManager.updateSubTask(subTask);
                     }
 
                     if (responseOfAddition == -1) {
@@ -76,7 +74,7 @@ public class TasksHandler implements HttpHandler {
                 break;
             case "DELETE":
                 if (requestQuery == null) {
-                    taskManager.deleteAllTasks();
+                    taskManager.deleteAllSubTasks();
                     response = "Все задачи удалены";
                 } else {
                     int id = Integer.parseInt(requestQuery.split("=")[1]);
@@ -89,7 +87,6 @@ public class TasksHandler implements HttpHandler {
                     }
                 }
                 break;
-
             default:
                 statusCode = 400;
                 response = "Некорректный запрос";
