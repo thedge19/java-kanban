@@ -12,9 +12,6 @@ import java.util.Scanner;
 
 public class HttpTaskServer {
     private static final int PORT = 8080;
-    static Scanner scanner = new Scanner(System.in);
-    static File file;
-    static TaskManager taskManager = new FileBackedTaskManager(file);
     private final HttpServer httpServer = HttpServer.create(new InetSocketAddress(PORT), 0);
 
     public HttpTaskServer(TaskManager taskManager) throws IOException {

@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpHandler;
 import manager.TaskManager;
 import services.GsonConverter;
 import tasks.SubTask;
+import enums.RequestMethod;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -22,13 +23,13 @@ public class SubTasksHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-        String requestMethod = exchange.getRequestMethod();
+        RequestMethod requestMethod = RequestMethod.valueOf(exchange.getRequestMethod());
         String requestQuery = exchange.getRequestURI().getQuery();
         String response;
         int statusCode = 200;
 
         switch (requestMethod) {
-            case "GET":
+            case RequestMethod.GET:
                 if (requestQuery == null) {
                     response = GsonConverter.getDefaultGson().toJson(taskManager.getSubTasks());
                 } else {
@@ -42,7 +43,7 @@ public class SubTasksHandler implements HttpHandler {
                     }
                 }
                 break;
-            case "POST":
+            case RequestMethod.POST:
                 try {
                     String bodyRequest = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
 
@@ -51,7 +52,7 @@ public class SubTasksHandler implements HttpHandler {
 
                     if (subTask.getId() == null) {
                         subTask.setStartTime(LocalDateTime.now());
-                        subTask.setDuration(10);
+                        subTask.setDuration(subTask.getConstantDuration());
                         responseOfAddition = taskManager.addSubTask(subTask);
                     } else {
                         SubTask oldSubTask = taskManager.getSubTask(subTask.getId());
@@ -72,7 +73,7 @@ public class SubTasksHandler implements HttpHandler {
                     response = "Ошибка при обработке запроса " + e.getMessage();
                 }
                 break;
-            case "DELETE":
+            case RequestMethod.DELETE:
                 if (requestQuery == null) {
                     taskManager.deleteAllSubTasks();
                     response = "Все задачи удалены";
@@ -96,6 +97,8 @@ public class SubTasksHandler implements HttpHandler {
 
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
+        } finally {
+            exchange.close();
         }
     }
 }

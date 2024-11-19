@@ -2,6 +2,7 @@ package servers;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import enums.RequestMethod;
 import manager.TaskManager;
 import services.GsonConverter;
 import tasks.Task;
@@ -22,13 +23,13 @@ public class TasksHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-        String requestMethod = exchange.getRequestMethod();
+        RequestMethod requestMethod = RequestMethod.valueOf(exchange.getRequestMethod());
         String requestQuery = exchange.getRequestURI().getQuery();
         String response;
         int statusCode = 200;
 
         switch (requestMethod) {
-            case "GET":
+            case RequestMethod.GET:
                 if (requestQuery == null) {
                     response = GsonConverter.getDefaultGson().toJson(taskManager.getTasks());
                 } else {
@@ -42,7 +43,7 @@ public class TasksHandler implements HttpHandler {
                     }
                 }
                 break;
-            case "POST":
+            case RequestMethod.POST:
                 try {
                     String bodyRequest = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
 
@@ -52,7 +53,7 @@ public class TasksHandler implements HttpHandler {
                     }
 
                     if (task.getDuration() == 0) {
-                        task.setDuration(10);
+                        task.setDuration(task.getConstantDuration());
                     }
 
                     int responseOfAddition;
@@ -74,7 +75,7 @@ public class TasksHandler implements HttpHandler {
                     response = "Ошибка при обработке запроса " + e.getMessage();
                 }
                 break;
-            case "DELETE":
+            case RequestMethod.DELETE:
                 if (requestQuery == null) {
                     taskManager.deleteAllTasks();
                     response = "Все задачи удалены";
@@ -99,6 +100,8 @@ public class TasksHandler implements HttpHandler {
 
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
+        } finally {
+            exchange.close();
         }
     }
 }

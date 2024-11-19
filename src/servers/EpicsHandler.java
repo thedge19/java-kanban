@@ -5,6 +5,7 @@ import com.sun.net.httpserver.HttpHandler;
 import manager.TaskManager;
 import services.GsonConverter;
 import tasks.Epic;
+import enums.RequestMethod;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -21,14 +22,14 @@ public class EpicsHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
 
-        String requestMethod = exchange.getRequestMethod();
+        RequestMethod requestMethod = RequestMethod.valueOf(exchange.getRequestMethod());
         String requestQuery = exchange.getRequestURI().getQuery();
 
         String response;
         int statusCode = 200;
 
         switch (requestMethod) {
-            case "GET":
+            case RequestMethod.GET:
                 if (requestQuery == null) {
                     response = GsonConverter.getDefaultGson().toJson(taskManager.getEpics());
                 } else {
@@ -42,7 +43,7 @@ public class EpicsHandler implements HttpHandler {
                     }
                 }
                 break;
-            case "POST":
+            case RequestMethod.POST:
                 try {
                     String bodyRequest = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
                     Epic epic = GsonConverter.getDefaultGson().fromJson(bodyRequest, Epic.class);
@@ -60,7 +61,7 @@ public class EpicsHandler implements HttpHandler {
                     response = "Ошибка при обработке запроса " + e.getMessage();
                 }
                 break;
-            case "DELETE":
+            case RequestMethod.DELETE:
                 if (requestQuery == null) {
                     taskManager.deleteAllEpics();
                     response = "Все задачи удалены";
@@ -84,6 +85,8 @@ public class EpicsHandler implements HttpHandler {
 
         try (OutputStream os = exchange.getResponseBody()) {
             os.write(response.getBytes());
+        } finally {
+            exchange.close();
         }
     }
 }

@@ -102,4 +102,8 @@ public class Task {
     public LocalDateTime getEndTime() {
         return startTime.plus(Duration.ofMinutes(duration));
     }
+
+    public Integer getConstantDuration() {
+        return 10;
+    }
 }
