@@ -7,12 +7,19 @@ import java.time.LocalDateTime;
 
 public class SubTask extends Task {
 
-    private final TaskType type = TaskType.SUBTASK;
+    private final transient TaskType type;
     private final int epicId;
 
     public SubTask(Integer id, String name, String description, Status status, int epicId, LocalDateTime startTime, long duration) {
         super(id, name, description, status, startTime, duration);
         this.epicId = epicId;
+        this.type = TaskType.SUBTASK;
+    }
+
+    public SubTask(String name, String description, Status status, int epicId) {
+        super(name, description, status);
+        this.epicId = epicId;
+        this.type = TaskType.SUBTASK;
     }
 
     public Integer getEpicId() {
